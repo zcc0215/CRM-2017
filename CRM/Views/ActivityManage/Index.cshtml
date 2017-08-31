@@ -13,11 +13,11 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-1 col-md-1 col-sm-1">名称：</div>
-            <div class="col-lg-1 col-md-4 col-sm-4">
+            <div class="col-lg-2 col-md-4 col-sm-4">
                 <input type="text" id="amName" class="form-control" value="@amName"/>
             </div>
             <div class="col-lg-1 col-md-1 col-sm-1">预算：</div>
-            <div class="col-lg-1 col-md-4 col-sm-4">
+            <div class="col-lg-2 col-md-4 col-sm-4">
                 <input type="text" id="amBudget" class="form-control" />
             </div>
             <div class="col-lg-1 col-md-1 col-sm-1">预期：</div>
@@ -55,10 +55,6 @@
                 </select>
             </div>
             <input type="hidden" id="amid" value="" />
-            <div class="col-lg-2 col-lg-2 col-md-2 col-sm-2">
-                <input type="button" value="新增" style="margin-left:10px" onclick="AddOrEdit()" id="btn" class="btn btn-primary" />
-                <input type="button" value="查询" style="margin-left:10px" onclick="Search()" id="btn" class="btn btn-primary" />
-            </div>
         </div>
         <div class="row">
             <div class="col-lg-1 col-md-1 col-sm-1">开始：</div>
@@ -68,6 +64,11 @@
             <div class="col-lg-1 col-md-1 col-sm-1">结束：</div>
             <div class="col-lg-2 col-md-4 col-sm-4">
                 <input type="text" id="amEndTime" class="form-control" />
+            </div>
+            <div class="col-lg-4"></div>
+            <div class="col-lg-2 col-md-2 col-sm-2">
+                <input type="button" value="新增" style="margin-left:10px" onclick="AddOrEdit()" id="btn" class="btn btn-primary" />
+                <input type="button" value="查询" style="margin-left:10px" onclick="Search()" id="btn" class="btn btn-primary" />
             </div>
         </div>
     </div>
