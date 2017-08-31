@@ -1,0 +1,161 @@
+﻿
+@{
+    ViewBag.Title = "权限管理";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var lmr = ViewData["lmr"] as IList<Model.Role>;
+    var lmrb = ViewData["lmrb"] as IList<Model.RoleButton>;
+}
+
+<div style="margin-top:30px">
+    <div class="container" style="margin-bottom:30px">
+        <div class="row">
+                <div class="col-lg-2 col-md-4 col-sm-1 " style="line-height:34px">角色名称：</div>
+                <div class="col-lg-3 col-md-6 col-sm-2" style="margin-left:-35px">
+                    <input type="text" id="RoleName" class="form-control" />
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-1 " style="line-height:34px">按钮权限：</div>
+                <div class="col-lg-3 col-md-6 col-sm-2" style="margin-left:-35px">
+                    @foreach(var item in lmrb)
+                    {
+                      <input type="checkbox" name="RoleButton" value="@item.rbId">@item.rbName
+                    }
+                </div>
+                <input type="hidden" id="rId" value="" />
+                <div class="col-lg-2 col-md-2 col-sm-1">
+                    <input type="button" value="新增" onclick="AddOrEdit()" id="btn" class="btn btn-primary" />
+                </div>
+        </div>
+    </div>
+    <table class="datatable tables">
+        <thead>
+            <tr>
+                <th>权限名称</th>
+                <th>操作</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var mr in lmr)
+            {
+                <tr>
+                    <td>@mr.RoleName</td>
+                    <td><a onclick="Update('@mr.RoleName','@mr.RoleButtons','@mr.rId')" style="cursor:pointer">编辑</a></td>
+                    <td><a onclick="Delete(@mr.rId)" style="cursor:pointer">删除</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<script type="text/javascript">
+    //新增修改
+    function AddOrEdit() {
+        var name = $("#RoleName").val();
+        var rId = $("#rId").val();
+        var id_array = new Array();
+        $('input[name="RoleButton"]:checked').each(function () {
+            id_array.push($(this).val());//向数组中添加元素  
+        });
+        var idstr = id_array.join(',');
+        if (idstr == "") {
+            idstr = "0";
+        }
+        if (name == "") {
+            alert("请输入权限名称！");
+            return false;
+        }
+        if (rId == "") {
+            var jsonString = "";
+            jsonString = "{\"RoleName\":\"" + name + "\",\"RoleButtons\":\"" + idstr + "\"}";
+            $.ajax({
+                type: "POST",   //访问WebService使用Post方式请求
+                contentType: "application/json", //WebService 会返回Json类型
+                url: "../Role/Add",
+                data: jsonString,   //这里是要传递的参数，格式为 data: "{paraName:paraValue}",下面将会看到
+                dataType: 'json',
+                success: function (result) {     //回调函数，result，返回值
+                    if (result.messagecode == "1") {
+                        alert("添加成功！");
+                        location.href = "/Role/Index";
+                    } else {
+                        alert("添加失败！");
+                    }
+                    return false;
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+
+                }
+            });
+        } else {
+            var jsonString = "";
+            jsonString = "{\"RoleName\":\"" + name + "\",\"RoleButtons\":\"" + idstr + "\",\"rId\":\"" + rId + "\"}";
+            $.ajax({
+                type: "POST",   //访问WebService使用Post方式请求
+                contentType: "application/json", //WebService 会返回Json类型
+                url: "../Role/Update",
+                data: jsonString,   //这里是要传递的参数，格式为 data: "{paraName:paraValue}",下面将会看到
+                dataType: 'json',
+                success: function (result) {     //回调函数，result，返回值
+                    if (result.messagecode == "1") {
+                        alert("修改成功！");
+                        location.href = document.URL;
+                    } else {
+                        alert("修改失败！");
+                    }
+                    $("#RoleName").val("");
+                    $('input[name="RoleButton"]').each(function () {
+                        $(this).attr("checked", false); 
+                    });
+                    $("#rId").val("");
+                    $("#btn").val("新增");
+                    return false;
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+
+                }
+            });
+        }
+
+    }
+    //删除
+    function Delete(rId) {
+        var jsonString = "";
+        jsonString = "{\"rId\":\"" + rId + "\"}";
+        $.ajax({
+            type: "POST",   //访问WebService使用Post方式请求
+            contentType: "application/json", //WebService 会返回Json类型
+            url: "../Role/Delete",
+            data: jsonString,   //这里是要传递的参数，格式为 data: "{paraName:paraValue}",下面将会看到
+            dataType: 'json',
+            success: function (result) {     //回调函数，result，返回值
+                if (result.messagecode == "1") {
+                    alert("删除成功！");
+                    location.href = "/Role/Index";
+                } else if (result.messagecode == "-1") {
+                    alert("该角色下存在员工！");
+                } else {
+                    alert("删除失败！");
+                }
+                return false;
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+
+            }
+        });
+    }
+    //编辑
+    function Update(RoleName, RoleButtons,rId) {
+        $("#RoleName").val(RoleName);
+        var RoleButton = RoleButtons.split(',');
+        for (var i = 0; i < RoleButton.length; i++){
+            $('input[name="RoleButton"]').each(function () {
+                if ($(this).val() == RoleButton[i]) {
+                    $(this).attr("checked", true);
+                }            
+            });
+        }
+        $("#rId").val(rId);
+        $("#btn").val("编辑");
+    }
+
+</script>
+

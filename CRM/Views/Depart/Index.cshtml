@@ -1,0 +1,138 @@
+﻿
+@{
+    ViewBag.Title = "部门管理";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var lmd = ViewData["lmd"] as IList<Model.Depart>;
+}
+
+<div style="margin-top:30px">
+    <div class="container-fluid" style="margin-bottom:30px">
+        <div class="row">
+                <div class="pull-right">
+                    <div class="col-lg-4 col-md-4 col-sm-1 " style="line-height:34px">部门名称：</div>
+                    <div class="col-lg-6 col-md-6 col-sm-2" style="margin-left:-35px">
+                        <input type="text" id="hrdDepartName" class="form-control" />
+                    </div>
+                    <input type="hidden" id="hrdId" value="" />
+                    <div class="col-lg-2 col-md-2 col-sm-1">
+                        <input type="button" value="新增" onclick="AddOrEdit()" id="btn" class="btn btn-primary" />
+                    </div>
+                </div>
+            </div>
+    </div>
+    <table class="datatable tables">
+     <thead>
+        <tr>
+            <th>部门名称</th>
+            <th>操作</th>
+            <th>操作</th>
+        </tr>
+     </thead>
+        <tbody>
+            @foreach (var md in lmd)
+            {
+                <tr>
+                    <td>@md.hrdDepartName</td>
+                    <td><a onclick="Update('@md.hrdDepartName','@md.hrdId')" style="cursor:pointer">编辑</a></td>
+                    <td><a onclick="Delete(@md.hrdId)" style="cursor:pointer">删除</a></td>
+                </tr>
+            }
+      </tbody>
+</table>
+</div>
+<script type="text/javascript">
+    //新增修改
+    function AddOrEdit() {
+        var name = $("#hrdDepartName").val();
+        var hrdId = $("#hrdId").val();
+        if (name == "") {
+            alert("请输入部门名称！");
+            return false;
+        }
+        if (hrdId == "") {
+            var jsonString = "";
+            jsonString = "{\"hrdDepartName\":\"" + name + "\"}";
+            $.ajax({
+                type: "POST",   //访问WebService使用Post方式请求
+                contentType: "application/json", //WebService 会返回Json类型
+                url: "../Depart/Add",
+                data: jsonString,   //这里是要传递的参数，格式为 data: "{paraName:paraValue}",下面将会看到
+                dataType: 'json',
+                success: function (result) {     //回调函数，result，返回值
+                    if (result.messagecode == "1") {
+                        alert("添加成功！");
+                        location.href = "/Depart/Index";
+                    } else {
+                        alert("添加失败！");
+                    }
+                    return false;
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+
+                }
+            });
+        } else {
+            var jsonString = "";
+            jsonString = "{\"hrdDepartName\":\"" + name + "\",\"hrdId\":\"" + hrdId + "\"}";
+            $.ajax({
+                type: "POST",   //访问WebService使用Post方式请求
+                contentType: "application/json", //WebService 会返回Json类型
+                url: "../Depart/Update",
+                data: jsonString,   //这里是要传递的参数，格式为 data: "{paraName:paraValue}",下面将会看到
+                dataType: 'json',
+                success: function (result) {     //回调函数，result，返回值
+                    if (result.messagecode == "1") {
+                        alert("修改成功！");
+                        location.href = document.URL;
+                    } else {
+                        alert("修改失败！");
+                    }
+                    $("#hrdDepartName").val("");
+                    $("#hrdId").val("");
+                    $("#btn").val("新增");
+                    return false;
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+
+                }
+            });
+        }
+
+    }
+    //删除
+    function Delete(hrdId) {
+        var jsonString = "";
+        jsonString = "{\"hrdId\":\"" + hrdId + "\"}";
+        $.ajax({
+            type: "POST",   //访问WebService使用Post方式请求
+            contentType: "application/json", //WebService 会返回Json类型
+            url: "../Depart/Delete",
+            data: jsonString,   //这里是要传递的参数，格式为 data: "{paraName:paraValue}",下面将会看到
+            dataType: 'json',
+            success: function (result) {     //回调函数，result，返回值
+                if (result.messagecode == "1") {
+                    alert("删除成功！");
+                    location.href = "/Depart/Index";
+                } else if (result.messagecode == "-1") {
+                    alert("部门下存在员工！");
+                }else {
+                    alert("删除失败！");
+                }
+                return false;
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+
+            }
+        });
+    }
+    //编辑
+    function Update(hrdDepartName, hrdId) {
+        $("#hrdDepartName").val(hrdDepartName);
+        $("#hrdId").val(hrdId);
+        $("#btn").val("编辑");
+    }
+
+</script>
+
+
+

@@ -1,0 +1,225 @@
+﻿@using Webdiyer.WebControls.Mvc;
+@{
+    ViewBag.Title = "员工管理";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var pagems = ViewData["pagems"] as PagedList<Model.CRMUser>;
+    var lmd = ViewData["lmd"] as IList<Model.Depart>;
+    var lmr = ViewData["lmr"] as IList<Model.Role>;
+    string Username = ViewBag.Username.ToString();
+    int ufkDepart = Convert.ToInt32(ViewBag.ufkDepart);
+    int ufkRole = Convert.ToInt32(ViewBag.ufkRole);
+
+}
+<div style="margin-top:30px">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-1 col-md-1 col-sm-1">姓名：</div>
+            <div class="col-lg-1 col-md-4 col-sm-4">
+                <input type="text"  id="Username" class="form-control" value="@Username" />
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-1">密码：</div>
+            <div class="col-lg-1 col-md-4 col-sm-4">
+                <input type="password"  id="Password" class="form-control" />
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-1">部门：</div>
+            <div class="col-lg-2 col-md-4 col-sm-4">
+                <select id="ufkDepart" class="form-control">
+                    <option value="-1">请选择</option>
+                    @foreach (var d in lmd)
+                    {
+                        if (ufkDepart == d.hrdId)
+                        {
+                            <option value="@d.hrdId" selected="selected">@d.hrdDepartName</option>
+                        }
+                        else
+                        {
+                            <option value = "@d.hrdId" > @d.hrdDepartName </option >
+                        }
+                    }
+                </select>
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-1">角色：</div>
+            <div class="col-lg-2 col-md-4 col-sm-4">
+                <select id="ufkRole" class="form-control">
+                    <option value="-1">请选择</option>
+                    @foreach (var r in lmr)
+                    {
+                        if (ufkRole == r.rId)
+                        {
+                            <option value="@r.rId" selected="selected">@r.RoleName</option>
+                        }
+                        else
+                        {
+                            <option value="@r.rId">@r.RoleName</option>
+                        }
+
+                    }
+                </select>
+            </div>
+            <input type="hidden" id="uid" value="" />
+            <div class="col-lg-2 col-lg-2 col-md-2 col-sm-2">
+                <input type="button" value="新增" style="margin-left:10px" onclick="AddOrEdit()" id="btn" class="btn btn-primary" />
+                <input type="button" value="查询" style="margin-left:10px" onclick="Search()" id="btn" class="btn btn-primary" />
+            </div>
+            </div>
+    </div>
+    <table class="table table-hover" style="margin-top:10px">
+        <tr>
+            <th>员工姓名</th>
+            <th>所属部门</th>
+            <th>角色名称</th>
+            <th>操作</th>
+            <th>操作</th>
+        </tr>
+        @foreach (var ms in pagems)
+            {
+            <tr>
+                <td>@ms.Username</td>
+                <td>@ms.hrdDepartName</td>
+                <td>@ms.RoleName</td>
+                <td><a onclick="Edit('@ms.Username','@ms.Password','@ms.ufkDepart','@ms.ufkRole','@ms.uId')" style="cursor:pointer">编辑</a></td>
+                <td><a onclick="CRMdelete(@ms.uId)" style="cursor:pointer">删除</a></td>
+            </tr>
+        }
+    </table>
+    <div>
+        @Html.Pager(pagems, new PagerOptions
+       {
+           FirstPageText = "第一页",
+           LastPageText = "最后页",
+           NextPageText = "下一页",
+           PrevPageText = "上一页",
+           NumericPagerItemCount = 5,
+           HorizontalAlign = "right",
+           PageIndexParameterName = "PageCount",
+           ContainerTagName = "ul",
+           CssClass = "pagination",
+           CurrentPagerItemTemplate = "<li class='active'><a href='#'>{0}</a></li>",
+           DisabledPagerItemTemplate = "<li class='disabled'><a>{0}</a></li>",
+           PagerItemTemplate = "<li>{0}</li>",
+           Id = "bootstrappager"
+       })
+    </div>
+</div>
+<script type="text/javascript">
+    //新增修改
+    function AddOrEdit() {
+        var Username = $("#Username").val();
+        var Password = $("#Password").val();
+        var uid = $("#uid").val();
+        var ufkDepart = $("#ufkDepart").val();
+        var ufkRole = $("#ufkRole").val();
+        if (Username == "") {
+            alert("请输入姓名！");
+            return false;
+        }
+        if (Password == "") {
+            alert("请输入密码！");
+            return false;
+        }
+        if (ufkDepart == "") {
+            alert("请选择部门！");
+            return false;
+        }
+        if (ufkRole == "") {
+            alert("请选择角色！");
+            return false;
+        }
+        if (uid == "") {
+            var jsonString = "";
+            jsonString = "{\"Username\":\"" + Username + "\",\"Password\":\"" + Password + "\",\"ufkDepart\":\"" + ufkDepart + "\",\"ufkRole\":\"" + ufkRole + "\"}";
+            $.ajax({
+                type: "POST",   //访问WebService使用Post方式请求
+                contentType: "application/json", //WebService 会返回Json类型
+                url: "../CRMUser/Add",
+                data: jsonString,   //这里是要传递的参数，格式为 data: "{paraName:paraValue}",下面将会看到
+                dataType: 'json',
+                success: function (result) {     //回调函数，result，返回值
+                    if (result.messagecode == "1") {
+                        alert("添加成功！");
+                        location.href = "/CRMUser/Index";
+                    } else if (result.messagecode == "-1") {
+                        alert("员工姓名重复！");
+                    }else {
+                        alert("添加失败！");
+                    }
+                    return false;
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+
+                }
+            });
+        } else {
+            var jsonString = "";
+            jsonString = "{\"Username\":\"" + Username + "\",\"Password\":\"" + Password + "\",\"ufkDepart\":\"" + ufkDepart + "\",\"ufkRole\":\"" + ufkRole + "\",\"uid\":\"" + uid + "\"}";
+            $.ajax({
+                type: "POST",   //访问WebService使用Post方式请求
+                contentType: "application/json", //WebService 会返回Json类型
+                url: "../CRMUser/Edit",
+                data: jsonString,   //这里是要传递的参数，格式为 data: "{paraName:paraValue}",下面将会看到
+                dataType: 'json',
+                success: function (result) {     //回调函数，result，返回值
+                    if (result.messagecode == "1") {
+                        alert("修改成功！");
+                        location.href = document.URL;
+                    } else {
+                        alert("修改失败！");
+                    }
+                    $("#Username").val("");
+                    $("#Password").val("");
+                    $("#ufkDepart").val(-1);
+                    $("#ufkRole").val(-1);
+                    $("#uid").val("");
+                    $("#btn").val("新增");
+                    return false;
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+
+                }
+            });
+        }
+
+    }
+    //删除
+    function CRMdelete(uid) {
+        var jsonString = "";
+        jsonString = "{\"uid\":\"" + uid + "\"}";
+        $.ajax({
+            type: "POST",   //访问WebService使用Post方式请求
+            contentType: "application/json", //WebService 会返回Json类型
+            url: "../CRMUser/Delete",
+            data: jsonString,   //这里是要传递的参数，格式为 data: "{paraName:paraValue}",下面将会看到
+            dataType: 'json',
+            success: function (result) {     //回调函数，result，返回值
+                if (result.messagecode == "1") {
+                    alert("删除成功！");
+                    location.href = "/CRMUser/Index";
+                } else {
+                    alert("删除失败！");
+                }
+                return false;
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+
+            }
+        });
+    }
+    //编辑
+    function Edit(Username, Password, ufkDepart, ufkRole, uid) {
+        $("#Username").val(Username);
+        $("#ufkDepart").val(ufkDepart);
+        $("#ufkRole").val(ufkRole);
+        $("#uid").val(uid);
+        $("#btn").val("编辑");
+    }
+    //查询
+    function Search() {
+        var Username = $("#Username").val();
+        var ufkDepart = $("#ufkDepart").val();
+        var ufkRole = $("#ufkRole").val();
+        location.href = "/CRMUser/Index?Username=" + Username + "&ufkDepart=" + ufkDepart + "&ufkRole=" + ufkRole;
+    }
+
+</script>
+
+

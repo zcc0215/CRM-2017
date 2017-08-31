@@ -1,0 +1,249 @@
+﻿@using Webdiyer.WebControls.Mvc;
+@{
+    ViewBag.Title = "任务管理";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var pagems = ViewData["pagems"] as PagedList<Model.ActivityAssignManage>;
+    var lmr = ViewData["lmr"] as IList<Model.Role>;
+    Dictionary<int, string> aaResult = LIB.EnumHelper.GetEnumDictionary(typeof(Model.aaResult));
+    int aafkamId = Convert.ToInt32(ViewBag.aafkamId);
+}
+<div style="margin-top:30px">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-1 col-md-1 col-sm-1">名称：</div>
+            <div class="col-lg-2 col-md-4 col-sm-4">
+                <input type="text" id="aaName" class="form-control"/>
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-1">预算：</div>
+            <div class="col-lg-2 col-md-4 col-sm-4">
+                <input type="text" id="aaBudget" class="form-control" />
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-1">状态：</div>
+            <div class="col-lg-2 col-md-4 col-sm-4">
+                <select id="aaResult" class="form-control">
+                    <option value="-1">请选择</option>
+                    @foreach (KeyValuePair<int, string> kvp in aaResult)
+                    {
+                      <option value="@kvp.Key">@kvp.Value</option>
+                    }
+                </select>
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-1">责任人：</div>
+            <div class="col-lg-2 col-md-4 col-sm-4">
+                <select id="aafkRole" class="form-control">
+                    <option value="-1">请选择</option>
+                    @foreach (var r in lmr)
+                    {
+                     <option value="@r.rId">@r.RoleName</option>
+                    }
+                </select>
+            </div>            
+        </div>
+        <div class="row">
+            <div class="col-lg-1 col-md-1 col-sm-1">开始：</div>
+            <div class="col-lg-2 col-md-4 col-sm-4">
+                <input type="text" id="aaBeginTime" class="form-control" />
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-1">结束：</div>
+            <div class="col-lg-2 col-md-4 col-sm-4">
+                <input type="text" id="aaEndTime" class="form-control" />
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-1">备注：</div>
+            <div class="col-lg-2 col-md-4 col-sm-4">
+                <input type="text" id="aaRemark" class="form-control" />
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2">
+                <input type="button" value="新增" style="margin-left:10px" onclick="AddOrEdit()" id="btn" class="btn btn-primary" />
+            </div>
+            <input type="hidden" id="aaid" value="" />
+        </div>
+    </div>
+    <table class="table table-hover" style="margin-top:10px">
+        <tr>
+            <th>任务名称</th>
+            <th>任务预算</th>
+            <th>任务状态</th>
+            <th>任务责任人</th>
+            <th>操作</th>
+            <th>操作</th>
+        </tr>
+        @foreach (var ms in pagems)
+            {
+            <tr>
+                <td>@ms.aaName</td>
+                <td>@ms.aaBudget</td>
+                @if (ms.aaResult.Value == 0)
+                {
+                    <td style="color:red">@aaResult[ms.aaResult.Value]</td>
+                }
+                else
+                {
+                    <td>@aaResult[ms.aaResult.Value]</td>
+                }
+                <td>@ms.RoleName</td>
+                <td><a onclick="Edit('@ms.aaName','@ms.aaBudget','@ms.aaResult','@ms.aafkRole','@ms.aaBeginTime.Value.ToString("yyyy-MM-dd")','@ms.aaEndTime.Value.ToString("yyyy-MM-dd")','@ms.aaRemark','@ms.aaId')" style="cursor:pointer">编辑</a></td>
+                <td><a onclick="CRMdelete(@ms.aaId)" style="cursor:pointer">删除</a></td>
+            </tr>
+        }
+    </table>
+    <div>
+        @Html.Pager(pagems, new PagerOptions
+   {
+       FirstPageText = "第一页",
+       LastPageText = "最后页",
+       NextPageText = "下一页",
+       PrevPageText = "上一页",
+       NumericPagerItemCount = 5,
+       HorizontalAlign = "right",
+       PageIndexParameterName = "PageCount",
+       ContainerTagName = "ul",
+       CssClass = "pagination",
+       CurrentPagerItemTemplate = "<li class='active'><a href='#'>{0}</a></li>",
+       DisabledPagerItemTemplate = "<li class='disabled'><a>{0}</a></li>",
+       PagerItemTemplate = "<li>{0}</li>",
+       Id = "bootstrappager"
+   })
+    </div>
+</div>
+<script type="text/javascript">
+    $('#aaBeginTime').datetimepicker({
+        format: 'yyyy-mm-dd',
+        language: 'zh-CN',
+
+    });
+    $('#aaEndTime').datetimepicker({
+        format: 'yyyy-mm-dd',
+        language: 'zh-CN'
+    });
+    //新增修改
+    function AddOrEdit() {
+        var aaName = $("#aaName").val();
+        var aaBudget = $("#aaBudget").val();
+        var aaId = $("#aaid").val();
+        var aaResult = $("#aaResult").val();
+        var aafkRole = $("#aafkRole").val();
+        var aaBeginTime = $("#aaBeginTime").val();
+        var aaEndTime = $("#aaEndTime").val();
+        var aaRemark = $("#aaRemark").val();
+        if (aaName == "") {
+            alert("请输入任务名称！");
+            return false;
+        }
+        if (aaBudget == "") {
+            alert("请输入任务预算！");
+            return false;
+        }
+        if (aaResult == -1) {
+            alert("请选择任务预期！");
+            return false;
+        }
+        if (aafkRole == -1) {
+            alert("请选择责任人！");
+            return false;
+        }
+        if (aaBeginTime == "") {
+            alert("请输入开始时间！");
+            return false;
+        }
+        if (aaEndTime == "") {
+            alert("请输入结束时间！");
+            return false;
+        }
+        if (aaRemark == "") {
+            alert("请输入任务备注！");
+            return false;
+        }
+        if (aaId == "") {
+            var jsonString = "";
+            jsonString = "{\"aaName\":\"" + aaName + "\",\"aaBudget\":\"" + aaBudget + "\",\"aaResult\":\"" + aaResult + "\",\"aafkRole\":\"" + aafkRole + "\",\"aaBeginTime\":\"" + aaBeginTime + "\",\"aaEndTime\":\"" + aaEndTime + "\",\"aaRemark\":\"" + aaRemark + "\",\"aafkamId\":\"" + @aafkamId + "\"}";
+            $.ajax({
+                type: "POST",   //访问WebService使用Post方式请求
+                contentType: "application/json", //WebService 会返回Json类型
+                url: "../ActivityAssignManage/Add",
+                data: jsonString,   //这里是要传递的参数，格式为 data: "{paraName:paraValue}",下面将会看到
+                dataType: 'json',
+                success: function (result) {     //回调函数，result，返回值
+                    if (result.messagecode == "1") {
+                        alert("添加成功！");
+                        location.href = "/ActivityAssignManage/Assign";
+                    } else {
+                        alert("添加失败！");
+                    }
+                    return false;
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+
+                }
+            });
+        } else {
+            var jsonString = "";
+            jsonString = "{\"aaName\":\"" + aaName + "\",\"aaBudget\":\"" + aaBudget + "\",\"aaResult\":\"" + aaResult + "\",\"aafkRole\":\"" + aafkRole + "\",\"aaBeginTime\":\"" + aaBeginTime + "\",\"aaEndTime\":\"" + aaEndTime + "\",\"aaRemark\":\"" + aaRemark + "\",\"aaId\":\"" + aaId + "\"}";
+            $.ajax({
+                type: "POST",   //访问WebService使用Post方式请求
+                contentType: "application/json", //WebService 会返回Json类型
+                url: "../ActivityAssignManage/Edit",
+                data: jsonString,   //这里是要传递的参数，格式为 data: "{paraName:paraValue}",下面将会看到
+                dataType: 'json',
+                success: function (result) {     //回调函数，result，返回值
+                    if (result.messagecode == "1") {
+                        alert("修改成功！");
+                        location.href = document.URL;
+                    } else {
+                        alert("修改失败！");
+                    }
+                    $("#aaName").val("");
+                    $("#aaBudget").val("");
+                    $("#aaResult").val(-1);
+                    $("#aafkRole").val(-1);
+                    $("#aaBeginTime").val("");
+                    $("#aaEndTime").val("");
+                    $("#aaRemark").val("");
+                    $("#aaid").val("");
+                    $("#btn").val("新增");
+                    return false;
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+
+                }
+            });
+        }
+
+    }
+    //删除
+    function CRMdelete(aaId) {
+        var jsonString = "";
+        jsonString = "{\"aaId\":\"" + aaId + "\"}";
+        $.ajax({
+            type: "POST",   //访问WebService使用Post方式请求
+            contentType: "application/json", //WebService 会返回Json类型
+            url: "../ActivityAssignManage/Delete",
+            data: jsonString,   //这里是要传递的参数，格式为 data: "{paraName:paraValue}",下面将会看到
+            dataType: 'json',
+            success: function (result) {     //回调函数，result，返回值
+                if (result.messagecode == "1") {
+                    alert("删除成功！");
+                    location.href = "/ActivityAssignManage/Assign";
+                } else {
+                    alert("删除失败！");
+                }
+                return false;
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+
+            }
+        });
+    }
+    //编辑
+    function Edit(aaName, aaBudget, aaResult, aafkRole, aaBeginTime, aaEndTime, aaRemark, aaId) {
+        $("#aaName").val(aaName);
+        $("#aaBudget").val(aaBudget);
+        $("#aaResult").val(aaResult);
+        $("#aafkRole").val(aafkRole);
+        $("#aaBeginTime").val(aaBeginTime);
+        $("#aaEndTime").val(aaEndTime);
+        $("#aaRemark").val(aaRemark);
+        $("#aaid").val(aaId);
+        $("#btn").val("编辑");
+    }
+</script>
+
