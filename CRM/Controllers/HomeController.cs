@@ -11,6 +11,7 @@ namespace CRM.Controllers
     {
         public ActionResult Index(int? PageCount = 1,int? PageSize=1)
         {
+            //演示Git管理代码
             IList<Model.Student> lms = new List<Model.Student>();
             //lms = BLL.testBLL.GetStudent();
             //lms = BLL.testBLL.Get<Model.Student>("select * from student");
