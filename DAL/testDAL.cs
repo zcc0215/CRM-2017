@@ -112,6 +112,22 @@ public class testDAL
         }
         return flag;
     }
+    /// <summary>
+    /// 调用存储过程获取学生信息
+    /// </summary>
+    /// <param name="ms"></param>
+    /// <returns></returns>
+    public DataSet GetStudent(Model.Student ms)
+    {
+        DataSet ds = new DataSet();
+        string storeProcName = "GetStudentNum";
+        SqlParameter[] paras = new SqlParameter[] {
+                new SqlParameter("@Name", ms.Name),
+                new SqlParameter("@Age", ms.Age)
+            };
+        ds = DBUtility.SqlHelp.SelectProcDataSet(storeProcName, paras);
+        return ds;
+    }
     public bool Edit(Model.Student ms)
     {
         bool flag = false;
