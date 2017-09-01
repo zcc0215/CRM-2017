@@ -295,7 +295,7 @@ namespace DBUtility
         public static int ExccuteInsertBySQL<T>(T t)
         {
             string sql = ReturnSql<T>(t);
-            return DBUtility.SqlHelp.ExecuteSingleSql(sql);
+            return DBUtility.SqlHelper.ExecuteSingleSql(sql);
         }
 
         /// <summary>
@@ -336,7 +336,7 @@ namespace DBUtility
             sqlValue = sqlValue.TrimEnd(',');
             sql = sql + sqlColumn + ") Values(" + sqlValue + ")";
             SqlParameter[] paras = listPara.ToArray();
-            return DBUtility.SqlHelp.ExecuteParaSql(sql, paras);
+            return DBUtility.SqlHelper.ExecuteParaSql(sql, paras);
         }
     }
 }

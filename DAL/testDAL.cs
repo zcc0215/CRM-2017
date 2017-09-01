@@ -14,7 +14,7 @@ public class testDAL
     }
     public IList<T> Get<T>(string sql)
     {
-        return DBUtility.DisposeSqlHelp.ReaderToList<T>(DBUtility.SqlHelp.SelectReader(sql));
+        return DBUtility.DisposeSqlHelp.ReaderToList<T>(DBUtility.SqlHelper.SelectReader(sql));
     }
     /// <summary>
     /// 获取学生信息
@@ -41,7 +41,7 @@ public class testDAL
     public IList<Model.Student> GetStudentNew()
     {
         string sql = @"select * from student ";
-        return DBUtility.DisposeSqlHelp.ReaderToList<Model.Student>(DBUtility.SqlHelp.SelectReader(sql));
+        return DBUtility.DisposeSqlHelp.ReaderToList<Model.Student>(DBUtility.SqlHelper.SelectReader(sql));
     }
     /// <summary>
     /// 添加学生
@@ -66,7 +66,7 @@ public class testDAL
     public bool add(Model.Student ms)
     {
         bool flag = false;
-        int res = DBUtility.SqlHelp.ExecuteSingleSql(DBUtility.DisposeSqlHelp.ReturnSql<Model.Student>(ms));
+        int res = DBUtility.SqlHelper.ExecuteSingleSql(DBUtility.DisposeSqlHelp.ReturnSql<Model.Student>(ms));
         if (res > 0)
         {
             flag = true;
@@ -125,13 +125,13 @@ public class testDAL
                 new SqlParameter("@Name", ms.Name),
                 new SqlParameter("@Age", ms.Age)
             };
-        ds = DBUtility.SqlHelp.SelectProcDataSet(storeProcName, paras);
+        ds = DBUtility.SqlHelper.SelectProcDataSet(storeProcName, paras);
         return ds;
     }
     public bool Edit(Model.Student ms)
     {
         bool flag = false;
-        int res = DBUtility.SqlHelp.ExecuteSingleSql(DBUtility.DisposeSqlHelp.ReturnUpdateSql<Model.Student>(ms));
+        int res = DBUtility.SqlHelper.ExecuteSingleSql(DBUtility.DisposeSqlHelp.ReturnUpdateSql<Model.Student>(ms));
         if (res > 0)
         {
             flag = true;

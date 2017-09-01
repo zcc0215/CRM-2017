@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,7 +18,7 @@ namespace DAL
         public bool add<T>(T Model)
         {
             bool flag = false;
-            int res = DBUtility.SqlHelp.ExecuteSingleSql(DBUtility.DisposeSqlHelp.ReturnSql<T>(Model));
+            int res = DBUtility.SqlHelper.ExecuteSingleSql(DBUtility.DisposeSqlHelp.ReturnSql<T>(Model));
             if (res > 0)
             {
                 flag = true;
@@ -32,7 +33,7 @@ namespace DAL
         public bool Update<T>(T Model)
         {
             bool flag = false;
-            int res = DBUtility.SqlHelp.ExecuteSingleSql(DBUtility.DisposeSqlHelp.ReturnUpdateSql<T>(Model));
+            int res = DBUtility.SqlHelper.ExecuteSingleSql(DBUtility.DisposeSqlHelp.ReturnUpdateSql<T>(Model));
             if (res > 0)
             {
                 flag = true;
@@ -48,12 +49,21 @@ namespace DAL
         public bool Delete<T>(T Model)
         {
             bool flag = false;
-            int res = DBUtility.SqlHelp.ExecuteSingleSql(DBUtility.DisposeSqlHelp.ReturnDeleteSql<T>(Model));
+            int res = DBUtility.SqlHelper.ExecuteSingleSql(DBUtility.DisposeSqlHelp.ReturnDeleteSql<T>(Model));
             if (res > 0)
             {
                 flag = true;
             }
             return flag;
+        }
+        /// <summary>
+        /// 批量插入数据
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <returns></returns>
+        public bool BulkAdd(DataTable dt)
+        {
+            return DBUtility.SqlHelper.SqlBulkCopyByDatatable(dt);
         }
     }
 }

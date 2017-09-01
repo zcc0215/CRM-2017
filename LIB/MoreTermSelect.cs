@@ -37,11 +37,11 @@ namespace LIB
             }
             if(PageModel != null&& !string.IsNullOrWhiteSpace(PageModel.fldName)&& PageModel.PageCount!=0&& PageModel.PageSize!=0)
             {
-                PageModel.TotalCount = DisposeSqlHelp.ReaderToList<T>(SqlHelp.SelectReader(sql, strConn)).Count;
+                PageModel.TotalCount = DisposeSqlHelp.ReaderToList<T>(SqlHelper.SelectReader(sql, strConn)).Count;
                 int firstPage = (PageModel.PageCount - 1) * PageModel.PageSize + 1;
                 sql = "select top("+ PageModel.PageSize + ") *  from (SELECT  ROW_NUMBER() OVER(ORDER BY "+ PageModel.fldName + ") RowNo,t.* from ("+sql+") t) w where  RowNo BETWEEN "+ firstPage + " and "+ PageModel.PageCount* PageModel.PageSize + " ";
             }
-            return DisposeSqlHelp.ReaderToList<T>(SqlHelp.SelectReader(sql, strConn));
+            return DisposeSqlHelp.ReaderToList<T>(SqlHelper.SelectReader(sql, strConn));
         }
         #region 组合SQL语句
         /// <summary>
@@ -173,7 +173,7 @@ namespace LIB
                         if (dataFieldCount > 0)
                         {
                             string sqlcol = "select * from syscolumns where id = object_id('" + NoRepeatNames[i].Split('.')[0] + "')";
-                            DataSet ds = SqlHelp.SelectDataSet(sqlcol);
+                            DataSet ds = SqlHelper.SelectDataSet(sqlcol);
                             foreach (DataRow dr in ds.Tables[0].Rows)
                             {
                                 datafields += NoRepeatNames[i].Split('.')[0] + "." + dr["name"].ToString();

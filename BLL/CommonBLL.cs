@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -48,6 +49,15 @@ namespace BLL
         public static bool Delete<T>(T Model)
         {
             return dal.Delete<T>(Model);
+        }
+        /// <summary>
+        /// 批量插入数据
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <returns></returns>
+        public static bool BulkAdd(DataTable dt)
+        {
+            return dal.BulkAdd(dt);
         }
     }
 }

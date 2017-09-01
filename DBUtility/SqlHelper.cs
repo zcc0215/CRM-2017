@@ -8,7 +8,7 @@ using System.Data;
 
 namespace DBUtility
 {
-    public class SqlHelp
+    public class SqlHelper
     {
         #region 执行简单SQL语句
         /// <summary>
@@ -502,6 +502,35 @@ namespace DBUtility
                 }
             }
 
+        }
+        /// <summary>
+        /// 批量插入数据
+        /// </summary>
+        /// <param name="dt"></param>
+        /// <param name="strConn"></param>
+        public static bool SqlBulkCopyByDatatable(DataTable dt, string strConn = "conn")
+        {
+            string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings[strConn].ConnectionString;
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                using (SqlBulkCopy sqlbulkcopy = new SqlBulkCopy(connectionString, SqlBulkCopyOptions.UseInternalTransaction))
+                {
+                    try
+                    {
+                        sqlbulkcopy.DestinationTableName = dt.TableName;
+                        for (int i = 0; i < dt.Columns.Count; i++)
+                        {
+                            sqlbulkcopy.ColumnMappings.Add(dt.Columns[i].ColumnName, dt.Columns[i].ColumnName);
+                        }
+                        sqlbulkcopy.WriteToServer(dt);
+                        return true;
+                    }
+                    catch (System.Exception ex)
+                    {
+                        return false;
+                    }
+                }
+            }
         }
         #endregion
 
