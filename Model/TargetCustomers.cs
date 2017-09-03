@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Model
 {
+    [DBUtility.KeyID(ID = "tcfkamId")]
     public class TargetCustomers
     {
         /// <summary>

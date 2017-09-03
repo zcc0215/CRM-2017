@@ -59,5 +59,29 @@ namespace BLL
         {
             return dal.BulkAdd(dt);
         }
+        /// <summary>
+        /// 根据表名获取表信息
+        /// </summary>
+        /// <param name="Tablename"></param>
+        /// <returns></returns>
+        public static IList<Model.TableInfo> GetTableInfo(string Tablename)
+        {
+            IList<Model.TableInfo> lmti = new List<Model.TableInfo>();
+            string CacheKey = "TableInfo_" + Tablename;
+            object TableInfoObj = LIB.CacheHelper.GetCache(CacheKey);
+            if (TableInfoObj != null)
+            {
+                lmti = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Model.TableInfo>>(TableInfoObj.ToString());
+            }
+            else
+            {
+                lmti = dal.GetTableInfo(Tablename);
+                if (lmti != null)
+                {
+                    LIB.CacheHelper.SetCache(CacheKey, Newtonsoft.Json.JsonConvert.SerializeObject(lmti), TimeSpan.FromHours(1));
+                }
+            }
+            return lmti;
+        }
     }
 }

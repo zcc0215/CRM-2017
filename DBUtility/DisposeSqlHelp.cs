@@ -263,6 +263,7 @@ namespace DBUtility
         }
         public static string ReturnDeleteSql<T>(T model)
         {
+            string sql = string.Empty;
             Type type = typeof(T);
 
             int i = type.GetProperties().Count();
@@ -278,7 +279,7 @@ namespace DBUtility
             }
             if (keyAttr.GetValue(model, null) != null)
             {
-                string sql = "delete from " + type.Name + " where " + keyAttr.Name + "='" + keyAttr.GetValue(model, null) + "'";
+                sql = "delete from " + type.Name + " where " + keyAttr.Name + "='" + keyAttr.GetValue(model, null) + "'";
                 return sql;
             }
             else

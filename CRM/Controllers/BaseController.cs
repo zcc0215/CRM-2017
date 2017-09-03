@@ -19,6 +19,10 @@ namespace CRM.Controllers
         /// excel导入的模板
         /// </summary>
         protected string ImportModleFile { get; set; }
+        /// <summary>
+        /// 导入外键标记
+        /// </summary>
+        public int ImportFlag { get; set; }
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             if (filterContext.HttpContext.Session["UserInfo"] == null)
@@ -53,7 +57,7 @@ namespace CRM.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult UploadExcelFile()
+        public ActionResult UploadExcelFile(int Flag=0)
         {
             DataTable dt = null, dtModel = null;
             string msg = ""; int errorNum = 0;
@@ -119,6 +123,11 @@ namespace CRM.Controllers
                         {
                             dtModel.Clear();
                             dtModel.Merge(dt, true, MissingSchemaAction.Ignore);
+                            if(Flag!=0)
+                            {
+                                ImportFlag = Flag;
+                            }
+                            dtModel.TableName = RouteData.Values["controller"].ToString();
                             msg = DoExcelData(dtModel);
                         }
 

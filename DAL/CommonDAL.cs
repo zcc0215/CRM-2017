@@ -65,5 +65,18 @@ namespace DAL
         {
             return DBUtility.SqlHelper.SqlBulkCopyByDatatable(dt);
         }
+        /// <summary>
+        /// 根据表名获取表信息
+        /// </summary>
+        /// <param name="Tablename"></param>
+        /// <returns></returns>
+        public IList<Model.TableInfo> GetTableInfo(string Tablename)
+        {
+            string sql = @"select a.name tiName,isnull(g.[value],'') tiCommentary FROM   syscolumns   a 
+                          inner join   sysobjects   d   on   a.id=d.id     and   d.xtype='U'   and     d.name<>'dtproperties'
+                          left join   sys.extended_properties   g   on   a.id=g.major_id   and   a.colid=g.minor_id
+                          where d.name='"+ Tablename + "'   ";
+            return DBUtility.DisposeSqlHelp.ReaderToList<Model.TableInfo>(DBUtility.SqlHelper.SelectReader(sql));
+        }
     }
 }

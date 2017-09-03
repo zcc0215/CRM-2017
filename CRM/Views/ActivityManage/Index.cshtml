@@ -80,6 +80,7 @@
             <th>责任人</th>
             <th>操作</th>
             <th>操作</th>
+            <th>操作</th>
         </tr>
         @foreach (var ms in pagems)
             {
@@ -90,6 +91,7 @@
                 <td>@ms.RoleName</td>
                 <td><a onclick="Edit('@ms.amName','@ms.amBudget','@ms.amResult','@ms.amfkRole','@ms.amBeginTime.Value.ToString("yyyy-MM-dd")','@ms.amEndTime.Value.ToString("yyyy-MM-dd")','@ms.amId')" style="cursor:pointer">编辑</a></td>
                 <td><a onclick="CRMdelete(@ms.amId)" style="cursor:pointer">删除</a></td>
+                <td><a href="/TargetCustomers/Index?Id=@ms.amId">导入客户</a></td>
             </tr>
         }
     </table>

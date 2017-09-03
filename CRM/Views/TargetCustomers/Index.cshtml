@@ -4,6 +4,7 @@
     var pagems = ViewData["pagems"] as PagedList<Model.TargetCustomers>;
     string tcName = ViewBag.tcName.ToString();
     string tcPhone = ViewBag.tcPhone.ToString();
+    int tcfkamId = Convert.ToInt32(ViewBag.tcfkamId);
 }
 <div style="margin-top:30px">
     <div class="container-fluid">
@@ -16,18 +17,23 @@
             <div class="col-lg-2 col-md-4 col-sm-4">
                 <input type="text" id="tcPhone" class="form-control" value="@tcPhone" />
             </div>
-            <div class="col-lg-4 col-md-2 col-sm-2">
-                <input type="button" value="查询" style="margin-left:10px" onclick="Search()" id="btn" class="btn btn-primary" />
-                <input type="button" value="新增" style="margin-left:10px" onclick="Import()" id="btn" class="btn btn-primary" />                
+            <div class="col-lg-2 col-md-2 col-sm-2">
+                <input type="button" value="查询" style="margin-left:10px" onclick="Search()" id="btn" class="btn btn-primary" />                 
             </div>
             <div class="col-lg-2 col-md-2 col-sm-2">
-                <a href="~/ExcelModel/市场部-目标客户.xlsx"/>
+                <form id="uploadForm" enctype="multipart/form-data">
+                    <input id="file" type="file" name="file" />
+                </form>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2">
+                <input type="button" value="导入" style="margin-left:10px" onclick="Import()" id="btn" class="btn btn-primary" />
+                <a href="~/ExcelModel/@ViewBag.excelName">下载导入模板</a>
             </div>
             </div>
     </div>
     <table class="table table-hover" style="margin-top:10px">
         <tr>
-            <th>客户名称</th>
+            <th>客户姓名</th>
             <th>客户性别</th>
             <th>客户电话</th>
             <th>客户邮箱</th>
@@ -67,6 +73,30 @@
         var tcName = $("#tcName").val();
         var tcPhone = $("#tcPhone").val();
         location.href = "/TargetCustomers/Index?tcName=" + tcName + "&tcPhone=" + tcPhone;
+    }
+    //导入
+    function Import() {
+        var file = $("#file").val();
+        if (file == '') {
+            alert("请选择文件！");
+            return false;
+        }
+        $.ajax({
+            url: '/TargetCustomers/UploadExcelFile?Flag=@tcfkamId',
+            type: 'POST',
+            cache: false,
+            data: new FormData($('#uploadForm')[0]),
+            processData: false,
+            contentType: false
+        }).done(function (res) {
+            if (res.messagecode == "1") {
+                alert("导入成功！");
+                location.href = document.URL;;
+            } else {
+                alert("导入失败！");
+            }
+            return false;
+        }).fail(function (res) { });
     }
 </script>
 
