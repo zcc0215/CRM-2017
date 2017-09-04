@@ -284,7 +284,7 @@ namespace DBUtility
             }
             else
             {
-                return "";
+                return "delete from " + type.Name;
             }
         }
         /// <summary>

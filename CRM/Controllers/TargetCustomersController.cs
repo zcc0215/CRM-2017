@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Data;
 using System.Linq;
+using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
 using Webdiyer.WebControls.Mvc;
@@ -50,51 +51,6 @@ namespace CRM.Controllers
             #endregion
 
             return View();
-        }
-        protected override string DoExcelData(System.Data.DataTable dt)
-        {
-            string data = "";
-
-            try
-            {
-                if (dt.Rows.Count == 0)
-                {
-                    return "excel中无数据";
-                }
-
-                #region 对应数据库字段
-                IList<Model.TableInfo> lmti =BLL.CommonBLL.GetTableInfo(dt.TableName);
-                NameValueCollection cols = new NameValueCollection();
-                //foreach (DataColumn dc in dt.Columns)
-                //cols.Add(dc.ColumnName, lmti.Where(n=>n.tiCommentary== dc.ColumnName).FirstOrDefault().tiName);
-                cols.Add("姓名", "tcName");
-                cols.Add("性别", "tcSex");
-                cols.Add("电话", "tcPhone");
-                cols.Add("邮箱", "tcEmail");
-                ChangeDtTitle(dt, cols);
-                #endregion
-
-                #region 构造外键列
-                dt.Columns.Add("tcfkamId", typeof(int));
-                foreach (DataRow dr in dt.Rows)
-                    dr["tcfkamId"] = this.ImportFlag;
-                #endregion
-                //Type type = Type.GetType("Model."+dt.TableName);
-                //dynamic obj = Activator.CreateInstance(type,null);
-                Model.TargetCustomers tc = new Model.TargetCustomers();
-                tc.tcfkamId = this.ImportFlag;
-                BLL.CommonBLL.Delete(tc);
-                bool Success = BLL.CommonBLL.BulkAdd(dt);
-                return Success ? "1" : "0";
-            }
-            catch (Exception e)
-            {
-                Exception ex = e;
-                while (ex.InnerException != null)
-                    ex = ex.InnerException;
-                data = ex.Message;
-            }
-            return data;
         }
     }
 }

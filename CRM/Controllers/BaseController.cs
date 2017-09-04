@@ -127,8 +127,59 @@ namespace CRM.Controllers
                             {
                                 ImportFlag = Flag;
                             }
+                            if(dtModel.Rows.Count==0)
+                            {
+                                msg = "excel中无数据";
+                            }
                             dtModel.TableName = RouteData.Values["controller"].ToString();
-                            msg = DoExcelData(dtModel);
+
+                            string Typename = "Model." + dtModel.TableName;
+                            dynamic obj = System.Reflection.Assembly.Load("Model").CreateInstance(Typename, false);
+
+                            #region 对应数据库字段
+                            IList<Model.TableInfo> lmti = BLL.CommonBLL.GetTableInfo(dtModel.TableName);
+                            NameValueCollection cols = new NameValueCollection();
+                            foreach (DataColumn dc in dtModel.Columns)
+                            {
+                                cols.Add(dc.ColumnName, lmti.Where(n => n.tiCommentary == dc.ColumnName).FirstOrDefault().tiName);
+                                lmti.Remove(lmti.Where(n => n.tiCommentary == dc.ColumnName).FirstOrDefault());
+                            }
+                            ChangeDtTitle(dtModel, cols);
+                            #endregion
+
+                            #region 对不在于报表中数据库项进行赋值
+                            foreach (Model.TableInfo ti in lmti)
+                            {
+                                if(ti.tiCommentary.Contains("关联"))
+                                {
+                                    dtModel.Columns.Add(ti.tiName, typeof(int));
+                                    foreach (DataRow dr in dtModel.Rows)
+                                        dr[ti.tiName] = this.ImportFlag;
+
+                                    #region 构造外键列
+                                    System.Reflection.PropertyInfo[] fields = obj.GetType().GetProperties();//获取指定对象的所有公共属性
+                                    foreach (System.Reflection.PropertyInfo t in fields)
+                                    {
+                                        if (t.Name==ti.tiName)
+                                        {
+                                            t.SetValue(obj, this.ImportFlag, null);//给对象赋值
+                                            break;
+                                        }
+                                    }
+                                    #endregion
+
+                                }
+                            }
+                            #endregion
+
+                            msg = DoExcelData(dtModel);//执行个性化操作
+
+                            #region 执行批量插入                                                       
+                            BLL.CommonBLL.Delete(obj);
+                            bool Success = BLL.CommonBLL.BulkAdd(dtModel);
+                            msg= Success ? "1" : "0";
+                            #endregion
+
                         }
 
                     }
