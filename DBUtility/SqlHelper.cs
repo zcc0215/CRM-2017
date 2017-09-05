@@ -513,7 +513,7 @@ namespace DBUtility
             string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings[strConn].ConnectionString;
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                using (SqlBulkCopy sqlbulkcopy = new SqlBulkCopy(connectionString, SqlBulkCopyOptions.UseInternalTransaction))
+                using (SqlBulkCopy sqlbulkcopy = new SqlBulkCopy(connectionString, SqlBulkCopyOptions.FireTriggers))
                 {
                     try
                     {

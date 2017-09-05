@@ -62,10 +62,8 @@ namespace CRM.Controllers
             DataTable dt = null, dtModel = null;
             string msg = ""; int errorNum = 0;
 
-            HttpFileCollection hfc = System.Web.HttpContext.Current.Request.Files;
+            HttpFileCollection hfc = System.Web.HttpContext.Current.Request.Files;            
             string modePath = Server.MapPath("~/ExcelModel/") + ImportModleFile;//原始文件
-
-
             try
             {
                 if (hfc.Count > 0 && hfc[0].ContentLength > 0)
@@ -78,7 +76,12 @@ namespace CRM.Controllers
                     }
                     else
                     {
-
+                        HttpPostedFileBase file = Request.Files["file"];
+                        if (file != null)
+                        {
+                            string filePath = Server.MapPath("~/Uploads/") + ImportModleFile;
+                            file.SaveAs(filePath);
+                        }
                         if (fileExt == "xls")
                         {
                             dt = LIB.ExcelHelper.RenderDataTableFromExcel(hfc[0].InputStream);
