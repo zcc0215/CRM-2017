@@ -22,6 +22,8 @@ namespace CRM
             app.UseHangfireServer();
             //启用Hangfire的仪表盘（可以看到任务的状态，进度等信息）
             app.UseHangfireDashboard();
+
+            app.MapSignalR();
         }
     }
 }

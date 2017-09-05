@@ -76,12 +76,12 @@ namespace CRM.Controllers
                     }
                     else
                     {
-                        HttpPostedFileBase file = Request.Files["file"];
-                        if (file != null)
-                        {
-                            string filePath = Server.MapPath("~/Uploads/") + ImportModleFile;
-                            file.SaveAs(filePath);
-                        }
+                        //HttpPostedFileBase file = Request.Files["file"];
+                        //if (file != null)
+                        //{
+                        //    string filePath = Server.MapPath("~/Uploads/") + ImportModleFile;
+                        //    file.SaveAs(filePath);
+                        //}
                         if (fileExt == "xls")
                         {
                             dt = LIB.ExcelHelper.RenderDataTableFromExcel(hfc[0].InputStream);
