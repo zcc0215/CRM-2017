@@ -88,16 +88,8 @@ namespace CRM.Controllers
                         {
                             dt = LIB.ExcelHelper.RenderDataTableFromExcel2007(hfc[0].InputStream);
                         }
-                        fileExt = modePath.Substring(modePath.LastIndexOf(".") + 1);
 
-                        if (fileExt == "xls")
-                        {
-                            dtModel = LIB.ExcelHelper.RenderDataTableFromExcel(System.IO.File.OpenRead(modePath));
-                        }
-                        else
-                        {
-                            dtModel = LIB.ExcelHelper.RenderDataTableFormExcelHeader2007(modePath);
-                        }
+                        dtModel = LIB.ExcelHelper.ExcelToDataTable(modePath);
 
                         if (dt.Columns.Count != dtModel.Columns.Count)
                         {
