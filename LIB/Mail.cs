@@ -20,9 +20,10 @@ namespace LIB
             mailObj.Subject = title;    //主题
             mailObj.Body = body;    //正文
 
-            SmtpClient smtp = new SmtpClient();
-            smtp.Host = "smtp.qq.com";         //smtp服务器名称
-            smtp.UseDefaultCredentials = true;
+            SmtpClient smtp = new SmtpClient("smtp.qq.com");//smtp服务器名称
+            smtp.EnableSsl = true;
+            smtp.UseDefaultCredentials = false;
+            smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
             smtp.Credentials = new NetworkCredential(EmailUsername, EmailPassword);  //发送人的登录名和密码
             try
             {
