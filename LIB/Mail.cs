@@ -10,13 +10,19 @@ namespace LIB
 {
     public static class Mail
     {
-        public static void MailSend(IList<MailAddress> toAddress, string title, string body)
+        public static void MailSend(string toAddress, string title, string body)
         {
             string EmailUsername = System.Configuration.ConfigurationManager.AppSettings["EmailUsername"];
             string EmailPassword = System.Configuration.ConfigurationManager.AppSettings["EmailPassword"];
             MailMessage mailObj = new MailMessage();
             mailObj.From = new MailAddress(EmailUsername); //发送人邮箱地址
-            mailObj.To.Add(toAddress);   //收件人邮箱地址
+            IList<MailAddress> toAddresses = new List<MailAddress>();
+            string[] toAddressSplits = toAddress.Split(';');
+            foreach (string toAddressSplit in toAddressSplits)
+            {
+                toAddresses.Add(new MailAddress(toAddressSplit));
+            }
+            mailObj.To.Add(toAddresses);   //收件人邮箱地址
             mailObj.Subject = title;    //主题
             mailObj.Body = body;    //正文
 
