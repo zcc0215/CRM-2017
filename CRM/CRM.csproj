@@ -172,6 +172,7 @@
     <Compile Include="Controllers\ActivityAssignManageController.cs" />
     <Compile Include="Controllers\ActivityManageController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\ClueManageController.cs" />
     <Compile Include="Controllers\CRMUserController.cs" />
     <Compile Include="Controllers\DepartController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -214,6 +215,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="ExcelModel\市场部-目标客户.xlsx" />
+    <Content Include="ExcelModel\市场部-销售线索.xlsx" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\colorpicker.js" />
     <Content Include="Scripts\colResizable-1.3.js" />
@@ -270,6 +272,7 @@
     <Content Include="Views\ActivityAssignManage\Index.cshtml" />
     <Content Include="Views\ActivityAssignManage\Assign.cshtml" />
     <Content Include="Views\TargetCustomers\Index.cshtml" />
+    <Content Include="Views\ClueManage\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

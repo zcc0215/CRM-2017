@@ -246,7 +246,7 @@ namespace LIB
                         if (sheet != null)
                         {
                             int rowCount = sheet.LastRowNum;//总行数  
-                            if (rowCount > 0)
+                            if (rowCount > -1)
                             {
                                 IRow firstRow = sheet.GetRow(0);//第一行  
                                 int cellCount = firstRow.LastCellNum;//列数  
