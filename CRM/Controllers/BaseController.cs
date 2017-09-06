@@ -76,17 +76,10 @@ namespace CRM.Controllers
                     }
                     else
                     {
-                        //HttpPostedFileBase file = Request.Files["file"];
-                        //if (file != null)
-                        //{
-                        //    string filePath = Server.MapPath("~/Uploads/") + ImportModleFile;
-                        //    file.SaveAs(filePath);
-                        //}
                         if (fileExt == "xls")
                         {
                             dt = LIB.ExcelHelper.RenderDataTableFromExcel(hfc[0].InputStream);
                         }
-
                         else
                         {
                             dt = LIB.ExcelHelper.RenderDataTableFromExcel2007(hfc[0].InputStream);
@@ -172,7 +165,7 @@ namespace CRM.Controllers
                             #region 执行批量插入                                                       
                             BLL.CommonBLL.Delete(obj);
                             bool Success = BLL.CommonBLL.BulkAdd(dtModel);
-                            msg= Success ? "1" : "0";
+                            msg = Success ? "1" : "0";
                             #endregion
 
                         }

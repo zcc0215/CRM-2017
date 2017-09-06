@@ -2,8 +2,10 @@
 @{
     ViewBag.Title = "销售线索";
     var pagems = ViewData["pagems"] as PagedList<Model.ClueManage>;
+    var lmr = ViewData["lmr"] as IList<Model.Role>;
     string cmCustomerName = ViewBag.cmCustomerName.ToString();
     string cmPhone = ViewBag.cmPhone.ToString();
+    int cmfkRole = Convert.ToInt32(ViewBag.cmfkRole);
 }
 <div style="margin-top:30px">
     <div class="container-fluid">
@@ -18,7 +20,9 @@
             </div>
             <div class="col-lg-2 col-md-2 col-sm-2">
                 <input type="button" value="查询" style="margin-left:10px" onclick="Search()" id="btn" class="btn btn-primary" />
+                <input type="button" value="确定" style="margin-left:10px" onclick="Edit()" id="btn" class="btn btn-primary" />
             </div>
+            <input type="hidden" id="cmId" value="" />
             <div class="col-lg-2 col-md-2 col-sm-2">
                 <form id="uploadForm" enctype="multipart/form-data">
                     <input id="file" type="file" name="file" />
@@ -29,6 +33,25 @@
                 <a href="~/ExcelModel/@ViewBag.excelName">下载导入模板</a>
             </div>
         </div>
+        <div class="row">
+            <div class="col-lg-1 col-md-1 col-sm-1" style="line-height:34px">责任人：</div>
+            <div class="col-lg-2 col-md-4 col-sm-4">
+                <select id="cmfkRole" class="form-control">
+                    <option value="-1">请选择</option>
+                    @foreach (var r in lmr)
+                    {
+                        if (cmfkRole != r.rId)
+                        {
+                            <option value="@r.rId">@r.RoleName</option>
+                        }
+                        else
+                        {
+                            <option value="@r.rId" selected="selected">@r.RoleName</option>
+                        }
+                    }
+                </select>
+            </div>
+        </div>
     </div>
     <table class="table table-hover" style="margin-top:10px">
         <tr>
@@ -37,6 +60,8 @@
             <th>客户邮箱</th>
             <th>意向开始时间</th>
             <th>意向结束时间</th>
+            <th>责任人</th>
+            <th>操作</th>
         </tr>
         @foreach (var ms in pagems)
             {
@@ -46,6 +71,8 @@
                 <td>@ms.cmEmail</td>
                 <td>@ms.cmBeginTime</td>
                 <td>@ms.cmEndTime</td>
+                <td>@ms.RoleName</td>
+                <td><a onclick="Update('@ms.cmCustomerName','@ms.cmfkRole','@ms.cmId')" style="cursor:pointer">分配</a></td>
             </tr>
         }
     </table>
@@ -73,7 +100,8 @@
     function Search() {
         var cmCustomerName = $("#cmCustomerName").val();
         var cmPhone = $("#cmPhone").val();
-        location.href = "/ClueManage/Index?cmCustomerName=" + cmCustomerName + "&cmPhone=" + cmPhone;
+        var cmfkRole = $("#cmfkRole").val();
+        location.href = "/ClueManage/Index?cmCustomerName=" + cmCustomerName + "&cmPhone=" + cmPhone + "&cmfkRole=" + cmfkRole;
     }
     //导入
     function Import() {
@@ -98,6 +126,45 @@
             }
             return false;
         }).fail(function (res) { });
+    }
+    //编辑
+    function Update(cmCustomerName, cmfkRole, cmId) {
+        $("#cmCustomerName").val(cmCustomerName);
+        $("#cmfkRole").val(cmfkRole);
+        $("#cmId").val(cmId);
+    }
+    function Edit() {
+        var cmId = $("#cmId").val();
+        var cmfkRole = $("#cmfkRole").val();
+        if (cmId == "") {
+            alert("请选择指定条目！")
+            return false;
+        }
+        if (cmfkRole == -1) {
+            alert("请选择责任人！")
+            return false;
+        }
+        var jsonString = "";
+        jsonString = "{\"cmfkRole\":\"" + cmfkRole + "\",\"cmId\":\"" + cmId + "\"}";
+        $.ajax({
+            type: "POST",   //访问WebService使用Post方式请求
+            contentType: "application/json", //WebService 会返回Json类型
+            url: "../ClueManage/Edit",
+            data: jsonString,   //这里是要传递的参数，格式为 data: "{paraName:paraValue}",下面将会看到
+            dataType: 'json',
+            success: function (result) {     //回调函数，result，返回值
+                if (result.messagecode == "1") {
+                    alert("修改成功！");
+                    location.href = document.URL;
+                } else {
+                    alert("修改失败！");
+                }
+                return false;
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+
+            }
+        });
     }
 </script>
 

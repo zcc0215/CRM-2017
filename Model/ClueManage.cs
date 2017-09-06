@@ -33,5 +33,16 @@ namespace Model
         /// 意向结束时间
         /// </summary>
         public string cmEndTime { get; set; }
+        /// <summary>
+        /// 分配角色
+        /// </summary>
+        public int? cmfkRole { get; set; }
+
+        #region 视图模型
+        /// <summary>
+        /// 角色名称
+        /// </summary>
+        public string RoleName { get; set; }
+        #endregion
     }
 }
