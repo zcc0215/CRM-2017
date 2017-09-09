@@ -1,10 +1,14 @@
-﻿using System;
+﻿using Postal;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Hosting;
+using System.Web.Mvc;
 
 namespace LIB
 {
@@ -47,6 +51,28 @@ namespace LIB
                 list.Add(resourceList[i]);
             }
             return list;
+        }
+        /// <summary>
+        /// 使用Postal库发送邮件(本地配置)//https://docs.microsoft.com/en-us/dotnet/framework/configure-apps/file-schema/network/network-element-network-settings
+        /// </summary>
+        public static void BackgroundSendMail()
+        {
+            var viewsPath = Path.GetFullPath(HostingEnvironment.MapPath(@"~/Views/Emails"));
+            var engines = new ViewEngineCollection();
+            engines.Add(new FileSystemRazorViewEngine(viewsPath));
+
+            var emailService = new EmailService(engines);
+
+            var email = new WelcomeEmail
+            {
+                //To = "test@example.com",
+                //From = "test@example.com",
+                To="zcc0215@hotmail.com",
+                From="516172658@qq.com",
+                Info = "欢迎使用我司产品！"
+            };
+
+            emailService.Send(email);
         }
     }
 }
