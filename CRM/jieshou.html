@@ -1,0 +1,26 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title></title>
+    <script src="Scripts/jquery-1.10.2.js"></script>
+    <script src="Scripts/jquery.signalR-2.2.2.js"></script>
+    <script src="/Signalr/Hubs"></script>
+    <script src="Scripts/Push.js"></script>
+    <script>
+        $(function () {
+            $.Push(
+            {
+                GroupName: 'Queue',
+                SiCode:'05010001',
+                notice: function (message) {
+                    alert(message);
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+
+</body>
+</html>

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using LIB.Hubs;
+using Microsoft.AspNet.SignalR;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
@@ -25,8 +27,11 @@ namespace CRM.Controllers
             if (lmcu.Count > 0) { 
                 Session["UserInfo"] = lmcu[0];
                 //Hangfire.BackgroundJob.Enqueue(() => LIB.Mail.MailSend("zcc0215@hotmail.com;zcc0215@hotmail.com", "测试", "成功"));
-                LIB.LogHelper.Default.Fatal("测试");
-                //Hangfire.BackgroundJob.Enqueue(() => LIB.Mail.BackgroundSendMail());
+                //LIB.LogHelper.Default.Fatal("测试");
+                //var jobId=  Hangfire.BackgroundJob.Enqueue(() => LIB.Mail.BackgroundSendMail());
+               // Hangfire.BackgroundJob.ContinueWith(jobId, () => LIB.Hubs.PushHub.PushToClientBySendEmailFinish());
+                //IHubContext chat = GlobalHost.ConnectionManager.GetHubContext<PushHub>();
+                //chat.Clients.All.notice("发送成功");
                 return RedirectToAction("Index", "Home");
             }
             else
