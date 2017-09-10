@@ -25,6 +25,7 @@ namespace CRM.Controllers
             if (lmcu.Count > 0) { 
                 Session["UserInfo"] = lmcu[0];
                 //Hangfire.BackgroundJob.Enqueue(() => LIB.Mail.MailSend("zcc0215@hotmail.com;zcc0215@hotmail.com", "测试", "成功"));
+                LIB.LogHelper.Default.Fatal("测试");
                 //Hangfire.BackgroundJob.Enqueue(() => LIB.Mail.BackgroundSendMail());
                 return RedirectToAction("Index", "Home");
             }
