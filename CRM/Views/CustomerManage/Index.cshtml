@@ -1,0 +1,74 @@
+﻿@using Webdiyer.WebControls.Mvc;
+@{
+    ViewBag.Title = "客户管理";
+    var pagems = ViewData["pagems"] as PagedList<Model.TargetCustomers>;
+}
+<div style="margin-top:30px">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-10 col-md-10 col-sm-10">
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-2">
+                <input type="button" value="群发邮件"  onclick="Email()" id="btn" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+    <table class="table table-hover" style="margin-top:10px">
+        <tr>
+            <th>客户姓名</th>
+            <th>客户性别</th>
+            <th>客户电话</th>
+            <th>客户邮箱</th>
+        </tr>
+        @foreach (var ms in pagems)
+            {
+            <tr>
+                <td>@ms.tcName</td>
+                <td>@ms.tcSex</td>
+                <td>@ms.tcPhone</td>
+                <td class="SendEmail">@ms.tcEmail</td>
+            </tr>
+        }
+    </table>
+    <div>
+        @Html.Pager(pagems, new PagerOptions
+   {
+       FirstPageText = "第一页",
+       LastPageText = "最后页",
+       NextPageText = "下一页",
+       PrevPageText = "上一页",
+       NumericPagerItemCount = 5,
+       HorizontalAlign = "right",
+       PageIndexParameterName = "PageCount",
+       ContainerTagName = "ul",
+       CssClass = "pagination",
+       CurrentPagerItemTemplate = "<li class='active'><a href='#'>{0}</a></li>",
+       DisabledPagerItemTemplate = "<li class='disabled'><a>{0}</a></li>",
+       PagerItemTemplate = "<li>{0}</li>",
+       Id = "bootstrappager"
+   })
+    </div>
+</div>
+<script type="text/javascript">
+    function Email() {
+        var jsonString = "";
+        jsonString = "{\"i\":\"1\"}";
+        $.ajax({
+            url: '/CustomerManage/SendEmail',
+            type: 'POST',
+            cache: false,
+            data: jsonString,
+            contentType: "application/json",
+            dataType: 'json'
+        }).done(function (res) {
+            if (res.messagecode == "1") {
+                alert("发送邮件请求已发送！");
+                location.href = document.URL;;
+            } else {
+                alert("请求失败！");
+            }
+            return false;
+        }).fail(function (res) { });
+    }
+</script>
+
