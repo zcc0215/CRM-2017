@@ -35,6 +35,11 @@ namespace CRM
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate*"));
 
+            bundles.Add(new ScriptBundle("~/bundles/SignalR").Include(
+                        "~/Scripts/jquery.signalR-2.2.2.js",
+                        "~/Scripts/Push.js"
+                        ));
+
             // 使用要用于开发和学习的 Modernizr 的开发版本。然后，当你做好
             // ready for production, use the build tool at https://modernizr.com to pick only the tests you need.
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(

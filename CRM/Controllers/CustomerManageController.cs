@@ -20,24 +20,22 @@ namespace CRM.Controllers
             lpm.PageCount = PageCount.Value;
             lpm.PageSize = PageSize.Value;
             lmtc = LIB.MoreTermSelect.MoreTerm<Model.TargetCustomers>(condition, "TargetCustomers", ref lpm);
-            List<string> SendMail = new List<string>();
-            //for(int i=0;i<lmtc.Count;i++)
-            //{
-            //    SendMail.Add(lmtc[i].tcEmail);
-            //}
-            SendMail = lmtc.Select(a => a.tcEmail).ToList();
+            List<string> SendMail = lmtc.Select(a => a.tcEmail).ToList();//筛选出所有客户邮箱
+
             PagedList<Model.TargetCustomers> pagems = new PagedList<Model.TargetCustomers>(lmtc, PageCount.Value, PageSize.Value, lpm.TotalCount);
             ViewData["pagems"] = pagems;
+
             ViewBag.SendMail = Newtonsoft.Json.JsonConvert.SerializeObject(SendMail);
             return View();
         }
         [HttpPost]
-        public ActionResult SendEmail(string i)
+        public ActionResult SendEmail(List<string> SendMail)
         {
-
+            var Id = Hangfire.BackgroundJob.Enqueue(()=>LIB.Mail.BackgroundSendMail(SendMail));
+            Hangfire.BackgroundJob.ContinueWith(Id, () => LIB.Hubs.PushHub.PushToClientBySendEmailFinish());
             var ret = new
             {
-                messagecode = i=="1" ? 1 : 0,//标识请求是否发送成功,非邮件成功
+                messagecode = SendMail.Count>0 ? 1 : 0,//标识请求是否发送成功,非邮件成功
             };
 
             return Json(ret, JsonRequestBehavior.AllowGet);

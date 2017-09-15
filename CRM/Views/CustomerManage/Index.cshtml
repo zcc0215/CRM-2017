@@ -2,6 +2,7 @@
 @{
     ViewBag.Title = "客户管理";
     var pagems = ViewData["pagems"] as PagedList<Model.TargetCustomers>;
+    string a = "";
 }
 <div style="margin-top:30px">
     <div class="container-fluid">
@@ -49,10 +50,22 @@
    })
     </div>
 </div>
+@Scripts.Render("~/bundles/SignalR")
+<script src="/Signalr/Hubs"></script>
 <script type="text/javascript">
+    $(function () {
+        $.Push(
+            {
+                GroupName: 'Queue',
+                SiCode: '05010001',
+                notice: function (message) {
+                    alert(message);
+                }
+            });
+    });
     function Email() {
         var jsonString = "";
-        jsonString = "{\"i\":\"1\"}";
+        jsonString = '@Html.Raw(ViewBag.SendMail)';
         $.ajax({
             url: '/CustomerManage/SendEmail',
             type: 'POST',

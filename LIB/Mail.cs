@@ -62,18 +62,15 @@ namespace LIB
             engines.Add(new FileSystemRazorViewEngine(viewsPath));
 
             var emailService = new EmailService(engines);
-
-            foreach (var To in Tos)
+            
+            var email = new WelcomeEmail
             {
-                var email = new WelcomeEmail
-                {
-                    To = To,
-                    From = "516172658@qq.com",
-                    Info = "欢迎使用我司产品！"
-                };
+                To = string.Join(",", Tos.ToArray()),
+                From = "516172658@qq.com",
+                Info = "欢迎使用我司产品！"
+            };
 
-                emailService.Send(email);
-            }
+            emailService.Send(email);
         }
     }
 }
