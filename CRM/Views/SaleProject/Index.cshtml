@@ -1,0 +1,225 @@
+﻿
+@{
+    ViewBag.Title = "销售计划";
+}
+
+<div style="margin-top:30px">
+    <div class="container" style="margin-bottom:30px">
+        <div class="row">
+            <input type="hidden" id="rId" value="" />
+            <div class="col-lg-2 col-md-2 col-sm-1">
+                <input type="button" value="新增数据" onclick="AddRow(true)" id="AddRowBtn" class="btn btn-primary" />
+                <input type="button" value="提交" onclick="Add()" id="Btn" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+    <table class="table table-hover" id="table">
+            <tr>
+                <th>计划名称</th>
+                <th>责任人</th>
+                <th>活动</th>
+                <th>客户</th>
+                <th>开始</th>
+                <th>结束</th>
+                <th>操作</th>
+                <th>移除</th>
+            </tr>
+    </table>
+</div>
+<script type="text/javascript">
+    var jsonRole;
+    var jsonactivity;
+    var jsontargetCustomers;
+    $(function () {
+        var Id = 1;
+        var jsonString = "";
+        //jsonString = "{\"Id\":\"" + Id + "\"}";
+        $.ajax({
+            type: "POST",   //访问WebService使用Post方式请求
+            contentType: "application/json", //WebService 会返回Json类型
+            url: "../SaleProject/GetSaleProject",
+            data: jsonString,   //这里是要传递的参数，格式为 data: "{paraName:paraValue}",下面将会看到
+            dataType: 'json',
+            success: function (result) {//回调函数，result，返回值
+                var jsondate = $.parseJSON(result.date);
+                    jsonRole = $.parseJSON(result.role);
+                    jsonactivity = $.parseJSON(result.activity);
+                    jsontargetCustomers = $.parseJSON(result.targetCustomers);
+                $.each(jsondate, function (index, item) {
+                    AddRow(false);
+                    FillRole(index, jsonRole);
+                    FillActivity(index, jsonactivity);
+                    FillTargetCustomers(index, jsontargetCustomers);
+                    BindTime(index);
+                    AddDate(index, item);
+                });
+                return false;
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+
+            }
+        });
+    });
+    //绑定时间控件
+    function BindTime(index) {
+        $("#table").find(".spBeginTime").eq(index).datetimepicker({
+            format: 'yyyy-mm-dd',
+            language: 'zh-CN',
+        });
+        $("#table").find(".spEndTime").eq(index).datetimepicker({
+            format: 'yyyy-mm-dd',
+            language: 'zh-CN',
+        });
+    }
+    //填充目标客户下拉框
+    function FillTargetCustomers(index, TargetCustomers) {
+        $.each(TargetCustomers, function (i, e) {
+            $("#table").find(".spfktcId").eq(index).append("<option value =\"" + e.tcId + "\">" + e.tcName + "</option>");
+        });
+    }
+    //填充市场活动下拉框
+    function FillActivity(index, Activity) {
+        $.each(Activity, function (i, e) {
+            $("#table").find(".spfkamId").eq(index).append("<option value =\"" + e.amId + "\">" + e.amName + "</option>");
+        });
+    }
+    //填充责任人下拉框
+    function FillRole(index, role) {
+        $.each(role, function (i, e) {
+            $("#table").find(".spfkRole").eq(index).append("<option value =\"" + e.rId + "\">" + e.RoleName + "</option>");
+        });
+    }
+    //添加行数据
+    function AddDate(index, item) {
+        $("#table").find(".spId").eq(index).val(item.spId);//主键
+        $("#table").find(".spName").eq(index).val(item.spName);//活动名称
+        $("#table").find(".spfkRole").eq(index).val(item.spfkRole);//责任人
+        $("#table").find(".spfkamId").eq(index).val(item.spfkamId);//市场活动
+        $("#table").find(".spfktcId").eq(index).val(item.spfktcId);//目标客户
+        $("#table").find(".spBeginTime").eq(index).val(item.spBeginTime.substring(0, 10));//开始时间
+        $("#table").find(".spEndTime").eq(index).val(item.spEndTime.substring(0, 10));//结束时间
+    }
+    //动态添加表格一行
+    function AddRow(flag) {
+        var tr = $("<tr></tr>");
+        var tdName = $("<td><input type=\"text\" class=\"form-control spName\" /><input type=\"hidden\" class=\"spId\" \></td>");
+        tr.append(tdName);//tr中添加名称td
+
+        var tdRole = $("<td><select class=\"form-control spfkRole\"><option value =\"-1\">请选择</option></select></td>");
+        tr.append(tdRole);//tr中添加责任人
+
+        var tdActivity = $("<td><select class=\"form-control spfkamId\"><option value =\"-1\">请选择</option></select></td>")
+        tr.append(tdActivity);//tr中添加市场活动
+
+        var tdTargetCustomers = $("<td><select class=\"form-control spfktcId\"><option value =\"-1\">请选择</option></select></td>")
+        tr.append(tdTargetCustomers);//tr中添加目标客户
+
+        var tdBegin = $("<td><input type=\"text\" class=\"form-control spBeginTime\" /></td>");
+        tr.append(tdBegin);//tr中添加开始时间
+
+        var tdEnd = $("<td><input type=\"text\" class=\"form-control spEndTime\" /></td>");
+        tr.append(tdEnd);//tr中添加结束时间
+
+        var tddo = $("<td><a onclick=\"Chance(this)\">生成机会</a></td>");
+        tr.append(tddo);//tr中添加操作td
+
+        var tdRemove = $("<td><a onclick=\"Remove(this)\">移除</a></td>");
+        tr.append(tdRemove);//tr中添加移除td
+
+        $("#table").append(tr);//将tr追加进table
+
+        if (flag) {
+            var index = $("#table tr").length - 2;
+            FillRole(index, jsonRole);
+            FillActivity(index, jsonactivity);
+            FillTargetCustomers(index, jsontargetCustomers);
+            BindTime(index);
+        }
+    }
+    //生成机会
+    function Chance(obj) {
+
+    }
+    //移除元素
+    function Remove(obj) {
+        var a = $(obj);
+        var tr = a.parent().parent();
+        tr.remove();
+    }
+    function Add() {
+        var flag = true;
+        var inputArray = [];//定义数组
+        $.each($("#table tr:gt(0)"), function (index, item) {
+            if ($(item).find(".spName").eq(0).val() == "") {                
+                flag = false;
+                var row = index + 1;
+                alert("请输入第" + row + "行活动名称！");
+                return false;
+            }
+            if ($(item).find(".spfkRole").eq(0).val() == -1) {
+                flag = false;
+                var row = index + 1;
+                alert("请选择第" + row + "行责任人！");
+                return false;
+            }
+            if ($(item).find(".spfkamId").eq(0).val() == -1) {
+                flag = false;
+                var row = index + 1;
+                alert("请选择第" + row + "行市场活动！");
+                return false;
+            }
+            if ($(item).find(".spfktcId").eq(0).val() == -1) {
+                flag = false;
+                var row = index + 1;
+                alert("请选择第" + row + "行目标客户！");
+                return false;
+            }
+            if ($(item).find(".spBeginTime").eq(0).val() == "") {
+                flag = false;
+                var row = index + 1;
+                alert("请输入第" + row + "行起始时间！");
+                return false;
+            }
+            if ($(item).find(".spEndTime").eq(0).val() == "") {
+                flag = false;
+                var row = index + 1;
+                alert("请输入第" + row + "行结束时间！");
+                return false;
+            }
+            var inputjson = {
+                spId: $(item).find(".spId").eq(0).val(),
+                spName: $(item).find(".spName").eq(0).val(),
+                spfkRole: $(item).find(".spfkRole").eq(0).val(),
+                spfkamId: $(item).find(".spfkamId").eq(0).val(),
+                spfktcId: $(item).find(".spfktcId").eq(0).val(),
+                spBeginTime: $(item).find(".spBeginTime").eq(0).val(),
+                spEndTime: $(item).find(".spEndTime").eq(0).val()
+            };
+            inputArray.push(inputjson);//将键值对添加进数组
+        });
+        if (!flag) {
+            return false;
+        }
+        var jsonString = JSON.stringify(inputArray);//将数组转换为json对象
+        $.ajax({
+            type: "POST",   //访问WebService使用Post方式请求
+            contentType: "application/json", //WebService 会返回Json类型
+            url: "../SaleProject/Add",
+            data: jsonString,   //这里是要传递的参数，格式为 data: "{paraName:paraValue}",下面将会看到
+            dataType: 'json',
+            success: function (result) {     //回调函数，result，返回值
+                if (result.messagecode == "0") {
+                    alert("执行成功！");
+                    location.href = "/SaleProject/Index";
+                } else {
+                    alert("执行失败！");
+                }
+                return false;
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+
+            }
+        });
+    }
+</script>
+

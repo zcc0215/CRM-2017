@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title</title>
-    <link href="http://fonts.googleapis.com/css?family=Oswald|Droid+Sans:400,700" rel="stylesheet" />
+    @*<link href="http://fonts.googleapis.com/css?family=Oswald|Droid+Sans:400,700" rel="stylesheet" />*@
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/jquery")
@@ -40,6 +40,14 @@
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">客户管理<b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         <li><a href="/CustomerManage/Index">群发邮件</a></li>
+                        @*<li><a href="/ActivityAssignManage/Index">任务分配</a></li>
+                <li><a href="/TargetCustomers/Index">目标客户</a></li>*@
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">销售管理<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/SaleProject/Index">销售计划</a></li>
                         @*<li><a href="/ActivityAssignManage/Index">任务分配</a></li>
                 <li><a href="/TargetCustomers/Index">目标客户</a></li>*@
                     </ul>

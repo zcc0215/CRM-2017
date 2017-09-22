@@ -18,6 +18,20 @@ namespace LIB
             public string where { get; set; }
         }
         /// <summary>
+        /// 获取单表数据
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static IList<T> GetListDate<T>()
+        {
+            Type t = typeof(T);
+            IList<T> lm = new List<T>();
+            IList<KeyValuePair<string, object>> condition = new List<KeyValuePair<string, object>>();
+            LIB.PageModel lpm = new LIB.PageModel();
+            lm = LIB.MoreTermSelect.MoreTerm<T>(condition, t.Name, ref lpm);
+            return lm;
+        }
+        /// <summary>
         /// 组合条件查询函数
         /// </summary>
         /// <typeparam name="T"></typeparam>
