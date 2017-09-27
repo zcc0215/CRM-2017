@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -58,6 +59,10 @@ namespace BLL
         public static IList<T> Get<T>(string sql)
         {
             return dal.Get<T>(sql);
+        }
+        public static DataSet GetStudent(Model.Student ms)
+        {
+            return dal.GetStudent(ms);
         }
     }
 }

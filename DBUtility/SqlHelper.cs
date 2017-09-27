@@ -913,9 +913,9 @@ namespace DBUtility
                     SqlCommand cmd = BuildIntCommand(conn, st, storeProcName, cmdParas);
                     int rows = cmd.ExecuteNonQuery();//作用条数
                     st.Commit();
-                    int returnvalue = (int)cmd.Parameters["@return"].Value;//返回值
+                    //int returnvalue = (int)cmd.Parameters["@return"].Value;//返回值
                     conn.Close();
-                    return returnvalue;
+                    return rows;
 
                 }
                 catch (SqlException e)

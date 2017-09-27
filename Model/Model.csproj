@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="ActivityAssignManage.cs" />
     <Compile Include="ActivityManage.cs" />
+    <Compile Include="BusiChance.cs" />
     <Compile Include="ClueManage.cs" />
     <Compile Include="CRMUser.cs" />
     <Compile Include="Depart.cs" />

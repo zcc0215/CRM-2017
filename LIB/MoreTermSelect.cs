@@ -22,13 +22,17 @@ namespace LIB
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static IList<T> GetListDate<T>()
+        public static IList<T> GetListDate<T>(string tablename="")
         {
             Type t = typeof(T);
+            if (string.IsNullOrWhiteSpace(tablename))
+            {
+                tablename = t.Name;
+            }
             IList<T> lm = new List<T>();
             IList<KeyValuePair<string, object>> condition = new List<KeyValuePair<string, object>>();
             LIB.PageModel lpm = new LIB.PageModel();
-            lm = LIB.MoreTermSelect.MoreTerm<T>(condition, t.Name, ref lpm);
+            lm = LIB.MoreTermSelect.MoreTerm<T>(condition, tablename, ref lpm);
             return lm;
         }
         /// <summary>

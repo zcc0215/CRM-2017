@@ -103,6 +103,103 @@ namespace DBUtility
             return (obj == null || (obj is DBNull)) ? true : false;
         }
 
+        #region DataTable转IList<T>
+        /// <summary>
+        /// DataTable转IList<T>
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="table"></param>
+        /// <returns></returns>
+        public static IList<T> DataTableConvertToList<T>(DataTable table)
+        {
+            if (table == null)
+            {
+                return null;
+            }
+            List<DataRow> rows = new List<DataRow>();
+            foreach (DataRow row in table.Rows)
+            {
+                rows.Add(row);
+            }
+            return ConvertTo<T>(rows);
+        }
+        public static IList<T> ConvertTo<T>(IList<DataRow> rows)
+        {
+            IList<T> list = null;
+            if (rows != null)
+            {
+                list = new List<T>();
+                foreach (DataRow row in rows)
+                {
+                    T item = CreateItem<T>(row);
+                    list.Add(item);
+                }
+            }
+            return list;
+        }
+        public static T CreateItem<T>(DataRow row)
+        {
+            T obj = default(T);
+            if (row != null)
+            {
+                obj = Activator.CreateInstance<T>();
+                foreach (DataColumn column in row.Table.Columns)
+                {
+                    PropertyInfo prop = obj.GetType().GetProperty(column.ColumnName);
+                    try
+                    {
+                        object value = row[column.ColumnName];
+                        prop.SetValue(obj, value, null);
+                    }
+                    catch
+                    {  //You can log something here     
+                        //throw;    
+                    }
+                }
+            }
+            return obj;
+        }
+        #endregion
+        /// <summary>
+        /// T转化为字典类型
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="Model"></param>
+        /// <returns></returns>
+        public static Dictionary<string, object> TConvertToDictionary<T>(T Model)
+        {
+            Dictionary<string, object> d = new Dictionary<string, object>();
+            Type type = typeof(T);
+            PropertyInfo[] info = type.GetProperties(BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.IgnoreCase | BindingFlags.Public);
+            for (int i = 0; i < info.Length; i++)
+            {
+                string Name = info[i].Name;
+                object Value = info[i].GetValue(Model, null);
+                if (Value != null)
+                {
+                    d[Name] = Value;
+                }
+            }
+            return d;
+        }
+        /// <summary>
+        /// 字典类型转化为sql参数
+        /// </summary>
+        /// <param name="d"></param>
+        /// <returns></returns>
+        public static SqlParameter[] DictionaryConvertToSqlParameter(Dictionary<string, object> d)
+        {
+            SqlParameter[] paras = new SqlParameter[d.Count];
+            int i = 0;
+            foreach(KeyValuePair<string, object> kvp in d)
+            {
+                paras[i] = new SqlParameter();
+                paras[i].ParameterName = kvp.Key;
+                paras[i].Value = kvp.Value;
+                i++;
+            }
+            return paras;
+        }
         /// <summary>
         /// 返回插入SQL语句
         /// </summary>

@@ -83,5 +83,25 @@ namespace BLL
             }
             return lmti;
         }
+        /// <summary>
+        /// 调用存储过程查询数据
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static IList<T> GetDataByProc<T>(T model)
+        {
+            return dal.GetDataByProc<T>(model);
+        }
+        /// <summary>
+        /// 调用存储过程执行Sql
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static bool ExecByProc<T>(T model)
+        {
+            return dal.ExecByProc<T>(model);
+        }
     }
 }

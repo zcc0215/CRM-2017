@@ -120,7 +120,7 @@ public class testDAL
     public DataSet GetStudent(Model.Student ms)
     {
         DataSet ds = new DataSet();
-        string storeProcName = "GetStudentNum";
+        string storeProcName = "P_Student";
         SqlParameter[] paras = new SqlParameter[] {
                 new SqlParameter("@Name", ms.Name),
                 new SqlParameter("@Age", ms.Age)

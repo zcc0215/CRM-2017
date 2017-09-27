@@ -178,6 +178,7 @@
     <Compile Include="Controllers\ActivityAssignManageController.cs" />
     <Compile Include="Controllers\ActivityManageController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\BusiChanceController.cs" />
     <Compile Include="Controllers\ClueManageController.cs" />
     <Compile Include="Controllers\CRMUserController.cs" />
     <Compile Include="Controllers\CustomerManageController.cs" />
@@ -268,6 +269,9 @@
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\ui.spinner.js" />
+    <Content Include="Sql\P_BusiChance.sql" />
+    <Content Include="Sql\p_db_wsp.sql" />
+    <Content Include="Sql\P_Student.sql" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -296,6 +300,7 @@
     <Content Include="Views\Emails\Welcome.cshtml" />
     <Content Include="Views\CustomerManage\Index.cshtml" />
     <Content Include="Views\SaleProject\Index.cshtml" />
+    <Content Include="Views\BusiChance\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -73,7 +73,7 @@ namespace CRM.Controllers
         [HttpPost]
         public ActionResult GetSaleProject(string Id)
         {
-            var date = Newtonsoft.Json.JsonConvert.SerializeObject(LIB.MoreTermSelect.GetListDate<Model.SaleProject>());//获取销售计划
+            var date = Newtonsoft.Json.JsonConvert.SerializeObject(LIB.MoreTermSelect.GetListDate<Model.SaleProject>(tablename: "SaleProject.spId,BusiChance.bcfkspId"));//获取销售计划
 
             var Role = Newtonsoft.Json.JsonConvert.SerializeObject(LIB.MoreTermSelect.GetListDate<Model.Role>());//获取角色
 
@@ -87,6 +87,18 @@ namespace CRM.Controllers
                 role = Role,
                 activity= Activity,
                 targetCustomers= TargetCustomers
+            };
+
+            return Json(ret, JsonRequestBehavior.AllowGet);
+        }
+        [HttpPost]
+        public ActionResult AddBusiChance(Model.BusiChance mb)
+        {
+            bool success = BLL.CommonBLL.ExecByProc<Model.BusiChance>(mb);
+
+            var ret = new
+            {
+                messagecode = success?1:0
             };
 
             return Json(ret, JsonRequestBehavior.AllowGet);

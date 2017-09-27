@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -11,6 +12,11 @@ namespace CRM.Controllers
     {
         public ActionResult Index(int? PageCount = 1,int? PageSize=1)
         {
+            //Model.Student ms = new Model.Student();
+            //ms.Name = "赵六";
+            //ms.Age = "21";
+            //var a = BLL.CommonBLL.ExecByProc(ms);
+
             //演示Git管理代码
             IList<Model.Student> lms = new List<Model.Student>();
             //lms = BLL.testBLL.GetStudent();

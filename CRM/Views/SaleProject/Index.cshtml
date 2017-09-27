@@ -8,7 +8,7 @@
         <div class="row">
             <input type="hidden" id="rId" value="" />
             <div class="col-lg-2 col-md-2 col-sm-1">
-                <input type="button" value="新增数据" onclick="AddRow(true)" id="AddRowBtn" class="btn btn-primary" />
+                <input type="button" value="新增数据" onclick="AddRow()" id="AddRowBtn" class="btn btn-primary" />
                 <input type="button" value="提交" onclick="Add()" id="Btn" class="btn btn-primary" />
             </div>
         </div>
@@ -46,11 +46,7 @@
                     jsonactivity = $.parseJSON(result.activity);
                     jsontargetCustomers = $.parseJSON(result.targetCustomers);
                 $.each(jsondate, function (index, item) {
-                    AddRow(false);
-                    FillRole(index, jsonRole);
-                    FillActivity(index, jsonactivity);
-                    FillTargetCustomers(index, jsontargetCustomers);
-                    BindTime(index);
+                    AddRow();
                     AddDate(index, item);
                 });
                 return false;
@@ -98,9 +94,12 @@
         $("#table").find(".spfktcId").eq(index).val(item.spfktcId);//目标客户
         $("#table").find(".spBeginTime").eq(index).val(item.spBeginTime.substring(0, 10));//开始时间
         $("#table").find(".spEndTime").eq(index).val(item.spEndTime.substring(0, 10));//结束时间
+        if (item.bcfkspId != null) {
+            $("#table").find(".AddChance").eq(index).hide();
+        }
     }
     //动态添加表格一行
-    function AddRow(flag) {
+    function AddRow() {
         var tr = $("<tr></tr>");
         var tdName = $("<td><input type=\"text\" class=\"form-control spName\" /><input type=\"hidden\" class=\"spId\" \></td>");
         tr.append(tdName);//tr中添加名称td
@@ -120,7 +119,7 @@
         var tdEnd = $("<td><input type=\"text\" class=\"form-control spEndTime\" /></td>");
         tr.append(tdEnd);//tr中添加结束时间
 
-        var tddo = $("<td><a onclick=\"Chance(this)\">生成机会</a></td>");
+        var tddo = $("<td><a onclick=\"Chance(this)\" class=\"AddChance\">生成机会</a></td>");
         tr.append(tddo);//tr中添加操作td
 
         var tdRemove = $("<td><a onclick=\"Remove(this)\">移除</a></td>");
@@ -128,17 +127,41 @@
 
         $("#table").append(tr);//将tr追加进table
 
-        if (flag) {
-            var index = $("#table tr").length - 2;
-            FillRole(index, jsonRole);
-            FillActivity(index, jsonactivity);
-            FillTargetCustomers(index, jsontargetCustomers);
-            BindTime(index);
-        }
+        var index = $("#table tr").length - 2;
+        FillRole(index, jsonRole);
+        FillActivity(index, jsonactivity);
+        FillTargetCustomers(index, jsontargetCustomers);
+        BindTime(index);
     }
     //生成机会
     function Chance(obj) {
+        var Id = $(obj).parent().parent().find(".spId").eq(0).val();
+        if (Id == "") {
+            alert("请先提交！");
+            return false;
+        }
+        var jsonString = "";
+        jsonString = "{\"bcfkspId\":\"" + Id + "\",\"bcType\":\"insert\"}";
+        $.ajax({
+            type: "POST",   //访问WebService使用Post方式请求
+            contentType: "application/json", //WebService 会返回Json类型
+            url: "../SaleProject/AddBusiChance",
+            data: jsonString,   //这里是要传递的参数，格式为 data: "{paraName:paraValue}",下面将会看到
+            dataType: 'json',
+            success: function (result) {//回调函数，result，返回值
+                if (result.messagecode == "1") {
+                    alert("执行成功！");
+                    location.href = "/SaleProject/Index";
+                } else {
+                    alert("执行失败！");
+                }
+                
+                return false;
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
 
+            }
+        });
     }
     //移除元素
     function Remove(obj) {

@@ -36,5 +36,9 @@ namespace Model
         /// 销售计划结束时间
         /// </summary>
         public DateTime? spEndTime { get; set; }
+
+        #region 视图模型 
+        public int? bcfkspId { get; set; }
+        #endregion
     }
 }
