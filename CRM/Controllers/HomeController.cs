@@ -8,7 +8,7 @@ using Webdiyer.WebControls.Mvc;
 
 namespace CRM.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         public ActionResult Index(int? PageCount = 1,int? PageSize=1)
         {

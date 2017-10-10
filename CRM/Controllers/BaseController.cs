@@ -188,5 +188,68 @@ namespace CRM.Controllers
             };
             return Json(ret, JsonRequestBehavior.AllowGet);
         }
+        /// <summary>
+        /// 根据Json传值执行相应操作
+        /// </summary>
+        /// <param name="mr"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult Exec(ExecModel mr)
+        {
+            #region 动态创建类实例
+            string Typename = "Model." + mr.Type;
+            dynamic obj = System.Reflection.Assembly.Load("Model").CreateInstance(Typename, false);
+            #endregion
+
+            #region 动态解析Json
+            dynamic v = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(mr.value);//{Name:张三,Age:21}
+            #endregion
+
+            #region 将类实例赋值
+            System.Reflection.PropertyInfo[] fields = obj.GetType().GetProperties();//获取指定对象的所有公共属性
+            foreach (System.Reflection.PropertyInfo t in fields)
+            {
+                Type type = t.PropertyType;
+                if (type.IsGenericType && type.GetGenericTypeDefinition().Equals(typeof(Nullable<>)))//判断convertsionType是否为nullable泛型类
+                {
+                    //如果type为nullable类，声明一个NullableConverter类，该类提供从Nullable类到基础基元类型的转换
+                    System.ComponentModel.NullableConverter nullableConverter = new System.ComponentModel.NullableConverter(type);
+                    //将type转换为nullable对的基础基元类型
+                    type = nullableConverter.UnderlyingType;
+                }
+                t.SetValue(obj, Convert.ChangeType(v[t.Name].Value,type), null);//给对象赋值         
+            }
+            #endregion
+
+            bool issuccess = false;
+            if (mr.ExecType=="Update")
+            {
+                issuccess = BLL.CommonBLL.Update(obj);
+            }
+            else if(mr.ExecType == "Insert")
+            {
+                issuccess = BLL.CommonBLL.add(obj);
+            }
+            else if (mr.ExecType == "Delete")
+            {
+                issuccess = BLL.CommonBLL.Delete(obj);
+            }
+            else if (mr.ExecType == "Proc")
+            {
+                issuccess = BLL.CommonBLL.ExecByProc(obj);
+            }
+
+            var ret = new
+            {
+                messagecode = issuccess ? 1 : 0,
+            };
+            return Json(ret, JsonRequestBehavior.AllowGet);
+        }
+    }
+    public class ExecModel
+    {
+        public string Type { get; set; }
+        public string value { get; set; }
+        public string ExecType { get; set; }
     }
 }

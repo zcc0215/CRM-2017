@@ -4,15 +4,29 @@
     var pagems = ViewData["pagems"] as PagedList<Model.BusiChance>;
 }
 <div style="margin-top:30px">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-1 col-md-1 col-sm-1">名称：</div>
+            <div class="col-lg-3 col-md-3 col-sm-3">
+                <input type="text" style="width:250px" id="bcName" class="form-control" />
+                <input type="hidden"  id="bcId">
+            </div>
+            <div class="col-lg-1 col-lg-1 col-md-1 col-sm-1">
+                <input type="button" value="保存" style="margin-left:10px" onclick="Save()" id="btn" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
     <table class="table table-hover" style="margin-top:10px">
         <tr>
             <th>业务名称</th>
+            <th>操作</th>
             <th>生成订单</th>
         </tr>
         @foreach (var ms in pagems)
             {
             <tr>
                 <td>@ms.bcName</td>
+                <td><a onclick="Update('@ms.bcName',@ms.bcId,this)">编辑</a></td>
                 <td><a>生成订单</a></td>
             </tr>
         }
@@ -36,4 +50,45 @@
    })
     </div>
 </div>
+<script type="text/javascript">
+    function Update(bcName, bcId, obj) {
+        $(obj).parent().parent().css("background-color","green");
+        $("#bcName").val(bcName);
+        $("#bcId").val(bcId);
+    }
+    function Save() {
+        var bcName = $("#bcName").val();
+        var bcId = $("#bcId").val();
+        if (bcName == "") {
+            alert("请输入业务机会名称！");
+            return false;
+        }
+        if (bcId == "") {
+            alert("请选择修改条目！");
+            return false;
+        }
+        var jsonString = "";
+        jsonString = "{\"bcId\":\"" + bcId + "\",\"bcName\":\"" + bcName + "\",\"bcType\":\"update\"}";
+        $.ajax({
+            type: "POST",   //访问WebService使用Post方式请求
+            contentType: "application/json", //WebService 会返回Json类型
+            url: "../BusiChance/UpdateBusiChance",
+            data: jsonString,   //这里是要传递的参数，格式为 data: "{paraName:paraValue}",下面将会看到
+            dataType: 'json',
+            success: function (result) {//回调函数，result，返回值
+                if (result.messagecode == "1") {
+                    alert("执行成功！");
+                    location.href = "/BusiChance/Index";
+                } else {
+                    alert("执行失败！");
+                }
+
+                return false;
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+
+            }
+        });
+    }
+</script>
 

@@ -28,5 +28,17 @@ namespace CRM.Controllers
             ViewData["pagems"] = pagems;
             return View();
         }
+        [HttpPost]
+        public ActionResult UpdateBusiChance(Model.BusiChance mb)
+        {
+            bool success = BLL.CommonBLL.ExecByProc<Model.BusiChance>(mb);
+
+            var ret = new
+            {
+                messagecode = success ? 1 : 0
+            };
+
+            return Json(ret, JsonRequestBehavior.AllowGet);
+        }
     }
 }

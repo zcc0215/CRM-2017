@@ -25,6 +25,10 @@ BEGIN
 	 begin
      insert into BusiChance values(@bcfkspId,null)
 	 end
+	 else if @bcType='update'
+	 begin
+	 update BusiChance set bcName=@bcName where bcId = @bcId
+	 end
 END
 
 GO
