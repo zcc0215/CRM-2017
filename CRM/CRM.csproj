@@ -180,11 +180,13 @@
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\BusiChanceController.cs" />
     <Compile Include="Controllers\ClueManageController.cs" />
+    <Compile Include="Controllers\ContractManageController.cs" />
     <Compile Include="Controllers\CRMUserController.cs" />
     <Compile Include="Controllers\CustomerManageController.cs" />
     <Compile Include="Controllers\DepartController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\OrderManageController.cs" />
     <Compile Include="Controllers\RoleController.cs" />
     <Compile Include="Controllers\SaleProjectController.cs" />
     <Compile Include="Controllers\TargetCustomersController.cs" />
@@ -301,6 +303,8 @@
     <Content Include="Views\CustomerManage\Index.cshtml" />
     <Content Include="Views\SaleProject\Index.cshtml" />
     <Content Include="Views\BusiChance\Index.cshtml" />
+    <Content Include="Views\OrderManage\Index.cshtml" />
+    <Content Include="Views\ContractManage\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

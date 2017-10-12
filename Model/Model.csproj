@@ -44,8 +44,10 @@
     <Compile Include="ActivityManage.cs" />
     <Compile Include="BusiChance.cs" />
     <Compile Include="ClueManage.cs" />
+    <Compile Include="ContractManage.cs" />
     <Compile Include="CRMUser.cs" />
     <Compile Include="Depart.cs" />
+    <Compile Include="OrderManage.cs" />
     <Compile Include="Role.cs" />
     <Compile Include="RoleButton.cs" />
     <Compile Include="SaleProject.cs" />

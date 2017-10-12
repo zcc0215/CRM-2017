@@ -24,5 +24,9 @@ namespace Model
         /// 存储过程操作类型
         /// </summary>
         public string bcType { get; set; }
+
+        #region 视图模型
+        public int? omfkbcId { get; set; }
+        #endregion
     }
 }

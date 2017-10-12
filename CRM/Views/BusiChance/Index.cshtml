@@ -27,7 +27,12 @@
             <tr>
                 <td>@ms.bcName</td>
                 <td><a onclick="Update('@ms.bcName',@ms.bcId,this)">编辑</a></td>
-                <td><a>生成订单</a></td>
+                <td>
+                   @if (ms.omfkbcId == null)
+                   {
+                      <a onclick="AddOrder(@ms.bcId,'@ms.bcName')">生成订单</a>
+                   }
+                </td>
             </tr>
         }
     </table>
@@ -88,6 +93,22 @@
             error: function (XMLHttpRequest, textStatus, errorThrown) {
 
             }
+        });
+    }
+    //生成订单
+    function AddOrder(omfkbcId, bcName) {
+        if (bcName == "") {
+            alert("请先输入业务机会名称！");
+            return false;
+        }
+        $.post("../BusiChance/AddOrder", { omfkbcId: omfkbcId }, function (result) {
+            if (result.messagecode == "1") {
+                alert("执行成功！");
+                location.href = "/BusiChance/Index";
+            } else {
+                alert("执行失败！");
+            }
+            return false;
         });
     }
 </script>

@@ -93,7 +93,15 @@ namespace DAL
             Dictionary<string, object> d = DBUtility.DisposeSqlHelp.TConvertToDictionary(model);//拆解Model，放入字典中
             SqlParameter[] paras = DBUtility.DisposeSqlHelp.DictionaryConvertToSqlParameter(d);  //将字典转化为sql参数          
             DataSet ds = DBUtility.SqlHelper.SelectProcDataSet(storeProcName, paras);//执行存储过程
-            return DBUtility.DisposeSqlHelp.DataTableConvertToList<T>(ds.Tables[0]);//将DataTable反射为IList
+            if(ds!=null)
+            {
+                return DBUtility.DisposeSqlHelp.DataTableConvertToList<T>(ds.Tables[0]);//将DataTable反射为IList
+            }
+            else
+            {
+                return null;
+            }
+            
         }
         /// <summary>
         /// 调用存储过程执行Sql

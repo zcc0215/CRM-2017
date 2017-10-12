@@ -855,8 +855,8 @@ namespace DBUtility
                 }
                 catch (SqlException e)
                 {
-
-                    throw new Exception(e.Message + aaa);
+                    return null;
+                    //throw new Exception(e.Message + aaa);
                 }
             }
         }
@@ -920,8 +920,8 @@ namespace DBUtility
                 }
                 catch (SqlException e)
                 {
-
-                    throw new Exception(e.Message);
+                    return 0;
+                    //throw new Exception(e.Message);
                 }
             }
 

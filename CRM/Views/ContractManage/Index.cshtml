@@ -1,0 +1,64 @@
+﻿
+@{
+    ViewBag.Title = "合同管理";
+    var lmc = LIB.MoreTermSelect.GetListDate<Model.ContractManage>();
+}
+<div style="margin-top:30px">
+    <div class="container-fluid" style="margin-bottom:30px">
+        <div class="row">
+            <div class="col-lg-1 col-md-1 col-sm-1">名称：</div>
+            <div class="col-lg-3 col-md-3 col-sm-3">
+                <input type="text" style="width:250px" id="cmName" class="form-control" />
+                <input type="hidden" id="cmId">
+            </div>
+            <div class="col-lg-1 col-lg-1 col-md-1 col-sm-1">
+                <input type="button" value="保存" style="margin-left:10px" onclick="Save()" id="btn" class="btn btn-primary" />
+            </div>
+        </div>
+    </div>
+    <table class="datatable tables">
+        <thead>
+            <tr>
+                <th>合同名称</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var ms in lmc)
+            {
+                <tr>
+                    <td>@ms.cmName</td>
+                    <td><a onclick="Update('@ms.cmName',@ms.cmId,this)">编辑</a></td>
+                </tr>
+            }
+       </tbody>
+</table>
+</div>
+<script type="text/javascript">
+    function Update(cmName, cmId, obj) {
+        $(obj).parent().parent().css("background-color", "green");
+        $("#cmName").val(cmName);
+        $("#cmId").val(cmId);
+    }
+    function Save() {
+        var cmName = $("#cmName").val();
+        var cmId = $("#cmId").val();
+        if (cmName == "") {
+            alert("请输入合同名称！");
+            return false;
+        }
+        if (cmId == "") {
+            alert("请选择修改条目！");
+            return false;
+        }
+        $.post("../ContractManage/Exec", { ExecType: "Update", Type: "ContractManage", value: "{cmId:\"" + cmId + "\",cmName:\"" + cmName + "\"}" }, function (result) {
+            if (result.messagecode == "1") {
+                alert("执行成功！");
+                location.href = "/ContractManage/Index";
+            } else {
+                alert("执行失败！");
+            }
+            return false;
+        });
+    }
+</script>

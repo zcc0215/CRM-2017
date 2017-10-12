@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Data;
@@ -25,6 +26,19 @@ namespace CRM.Controllers
         public int ImportFlag { get; set; }
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
+            #region 测试登陆
+            if (Session["UserInfo"] == null)
+            {
+                Model.CRMUser mc = new Model.CRMUser();
+                mc.uId = 1;
+                mc.Username = "admin";
+                mc.Password = "e10adc3949ba59abbe56e057f20f883e";
+                mc.ufkDepart = 1;
+                mc.ufkRole = 2;
+                Session["UserInfo"] = mc;
+            }
+            #endregion
+
             if (filterContext.HttpContext.Session["UserInfo"] == null)
                 filterContext.Result = RedirectToAction("Index", "Login");
             else
@@ -217,7 +231,13 @@ namespace CRM.Controllers
                     //将type转换为nullable对的基础基元类型
                     type = nullableConverter.UnderlyingType;
                 }
-                t.SetValue(obj, Convert.ChangeType(v[t.Name].Value,type), null);//给对象赋值         
+                foreach(var r in v)//对json进行循环
+                {
+                    if (r.Name == t.Name)//判断当前属性是否在json中
+                    {
+                        t.SetValue(obj, Convert.ChangeType(v[t.Name].Value, type), null);//给对象赋值 
+                    }
+                }
             }
             #endregion
 

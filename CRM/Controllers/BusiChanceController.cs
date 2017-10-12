@@ -21,7 +21,7 @@ namespace CRM.Controllers
             lpm.PageCount = PageCount.Value;
             lpm.PageSize = PageSize.Value;
 
-            lmb = LIB.MoreTermSelect.MoreTerm<Model.BusiChance>(condition, "BusiChance", ref lpm);
+            lmb = LIB.MoreTermSelect.MoreTerm<Model.BusiChance>(condition, "BusiChance.bcId,OrderManage.omfkbcId", ref lpm);
 
             PagedList<Model.BusiChance> pagems = new PagedList<Model.BusiChance>(lmb, PageCount.Value, PageSize.Value, lpm.TotalCount);
 
@@ -33,6 +33,17 @@ namespace CRM.Controllers
         {
             bool success = BLL.CommonBLL.ExecByProc<Model.BusiChance>(mb);
 
+            var ret = new
+            {
+                messagecode = success ? 1 : 0
+            };
+
+            return Json(ret, JsonRequestBehavior.AllowGet);
+        }
+        [HttpPost]
+        public ActionResult AddOrder(Model.OrderManage mo)
+        {
+            bool success = BLL.CommonBLL.add<Model.OrderManage>(mo);
             var ret = new
             {
                 messagecode = success ? 1 : 0
