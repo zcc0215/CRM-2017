@@ -8,11 +8,13 @@ using System.Threading.Tasks;
 using NPOI.SS.UserModel;
 using NPOI.HSSF.UserModel;
 using NPOI.XSSF.UserModel;
+using System.Data.SqlClient;
 
 namespace LIB
 {
     public class ExcelHelper
     {
+        #region 读取Excel
         public static DataTable RenderDataTableFromExcel(Stream excelFileStream)
         {
             using (excelFileStream)
@@ -321,5 +323,73 @@ namespace LIB
                 return null;
             }
         }
+        #endregion
+
+        #region 写入Excel
+        public static MemoryStream ExportExcel(DataTable dt)
+        {
+            NPOI.HSSF.UserModel.HSSFWorkbook book = new NPOI.HSSF.UserModel.HSSFWorkbook();
+            //添加一个sheet  
+            NPOI.SS.UserModel.ISheet sheet1 = book.CreateSheet("Sheet1");
+            //给sheet1添加第一行的头部标题  
+            NPOI.SS.UserModel.IRow row1 = sheet1.CreateRow(0);
+            //row1.RowStyle.FillBackgroundColor = "";  
+            for (int i = 0; i < dt.Columns.Count; i++)
+            {
+                row1.CreateCell(i).SetCellValue(dt.Columns[i].ColumnName);
+            }
+            //将数据逐步写入sheet1各个行  
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                NPOI.SS.UserModel.IRow rowtemp = sheet1.CreateRow(i + 1);
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    rowtemp.CreateCell(j).SetCellValue(dt.Rows[i][j].ToString().Trim());
+                }
+            } 
+            // 写入到客户端   
+            System.IO.MemoryStream ms = new System.IO.MemoryStream();
+            book.Write(ms);
+            ms.Seek(0, SeekOrigin.Begin);
+            return ms;
+        }
+        public static MemoryStream RenderToExcel(SqlDataReader reader)
+        {
+            MemoryStream ms = new MemoryStream();
+
+            using (reader)
+            {
+                IWorkbook workbook = new HSSFWorkbook();
+                ISheet sheet = workbook.CreateSheet();
+                IRow headerRow = sheet.CreateRow(0);
+                int cellCount = reader.FieldCount;
+
+                // handling header.  
+                for (int i = 0; i < cellCount; i++)
+                {
+                    headerRow.CreateCell(i).SetCellValue(reader.GetName(i));
+                }
+
+                // handling value.  
+                int rowIndex = 1;
+                while (reader.Read())
+                {
+                    IRow dataRow = sheet.CreateRow(rowIndex);
+
+                    for (int i = 0; i < cellCount; i++)
+                    {
+                        dataRow.CreateCell(i).SetCellValue(reader[i].ToString());
+                    }
+
+                    rowIndex++;
+                }
+
+                workbook.Write(ms);
+                ms.Flush();
+                ms.Position = 0;
+            }
+            return ms;
+        }
+        #endregion
     }
 }

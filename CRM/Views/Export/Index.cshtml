@@ -1,0 +1,39 @@
+﻿
+@{
+    ViewBag.Title = "报表导出";
+    var dt = ViewData["dt"] as System.Data.DataTable;
+}
+<div style="margin-top:30px">
+    <div class="container-fluid" style="margin-bottom:30px">
+        <div class="row">
+            <div class="col-lg-10 col-md-10 col-sm-10"></div>
+            <div class="col-lg-2 col-md-2 col-sm-2">
+                导出：<a href='/Export/BusiAnalysis' target='_blank'>业务分析</a>
+            </div>
+        </div>
+    </div>
+    <table class="datatable tables">
+        <thead>
+            <tr>
+                <th>责任人</th>
+                <th>销售计划名称</th>
+                <th>业务机会名称</th>
+                <th>订单名称</th>
+                <th>合同名称</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (System.Data.DataRow ms in dt.Rows)
+            {
+                <tr>
+                    <td>@ms["RoleName"]</td>
+                    <td>@ms["spName"]</td>
+                    <td>@ms["bcName"]</td>
+                    <td>@ms["omName"]</td>
+                    <td>@ms["cmName"]</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+

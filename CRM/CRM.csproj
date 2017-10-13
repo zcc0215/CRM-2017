@@ -184,6 +184,7 @@
     <Compile Include="Controllers\CRMUserController.cs" />
     <Compile Include="Controllers\CustomerManageController.cs" />
     <Compile Include="Controllers\DepartController.cs" />
+    <Compile Include="Controllers\ExportController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\OrderManageController.cs" />
@@ -274,6 +275,7 @@
     <Content Include="Sql\P_BusiChance.sql" />
     <Content Include="Sql\p_db_wsp.sql" />
     <Content Include="Sql\P_Student.sql" />
+    <Content Include="Sql\script.sql" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -305,6 +307,7 @@
     <Content Include="Views\BusiChance\Index.cshtml" />
     <Content Include="Views\OrderManage\Index.cshtml" />
     <Content Include="Views\ContractManage\Index.cshtml" />
+    <Content Include="Views\Export\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

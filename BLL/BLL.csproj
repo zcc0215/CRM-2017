@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommonBLL.cs" />
+    <Compile Include="ExportBLL.cs" />
     <Compile Include="testBLL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

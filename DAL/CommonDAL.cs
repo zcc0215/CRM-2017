@@ -76,7 +76,7 @@ namespace DAL
             string sql = @"select a.name tiName,isnull(g.[value],'') tiCommentary FROM   syscolumns   a 
                           inner join   sysobjects   d   on   a.id=d.id     and   d.xtype='U'   and     d.name<>'dtproperties'
                           left join   sys.extended_properties   g   on   a.id=g.major_id   and   a.colid=g.minor_id
-                          where d.name='"+ Tablename + "'   ";
+                          where d.name in ("+ Tablename + ")   ";
             return DBUtility.DisposeSqlHelp.ReaderToList<Model.TableInfo>(DBUtility.SqlHelper.SelectReader(sql));
         }
         /// <summary>

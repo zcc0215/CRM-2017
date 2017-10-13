@@ -139,7 +139,8 @@ namespace CRM.Controllers
                             dynamic obj = System.Reflection.Assembly.Load("Model").CreateInstance(Typename, false);
 
                             #region 对应数据库字段
-                            IList<Model.TableInfo> lmti = BLL.CommonBLL.GetTableInfo(dtModel.TableName);
+                            string TableName = "'" + dtModel.TableName + "'";
+                            IList<Model.TableInfo> lmti = BLL.CommonBLL.GetTableInfo(TableName);
                             NameValueCollection cols = new NameValueCollection();
                             foreach (DataColumn dc in dtModel.Columns)
                             {
