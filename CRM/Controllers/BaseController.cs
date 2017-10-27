@@ -35,6 +35,8 @@ namespace CRM.Controllers
                 mc.Password = "e10adc3949ba59abbe56e057f20f883e";
                 mc.ufkDepart = 1;
                 mc.ufkRole = 2;
+                mc.RoleName = "总经理";
+                mc.RoleButtons = "1";
                 Session["UserInfo"] = mc;
             }
             #endregion
@@ -45,6 +47,11 @@ namespace CRM.Controllers
                 LoginUserInfo = filterContext.HttpContext.Session["UserInfo"] as Model.CRMUser;
 
             base.OnActionExecuting(filterContext);
+        }
+        public ActionResult LoginOut()
+        {
+            Session["UserInfo"] = null;
+            return RedirectToAction("Index", "Login");
         }
         /// <summary>
         /// 转换DataTable 标题

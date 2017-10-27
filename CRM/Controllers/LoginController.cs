@@ -23,7 +23,7 @@ namespace CRM.Controllers
             condition.Add(new KeyValuePair<string, object>("Username", mcu.Username));
             condition.Add(new KeyValuePair<string, object>("Password", LIB.MD5.GetMD5(mcu.Password)));
             LIB.PageModel lpm = new LIB.PageModel();
-            lmcu = LIB.MoreTermSelect.MoreTerm<Model.CRMUser>(condition, "CRMUser", ref lpm);
+            lmcu = LIB.MoreTermSelect.MoreTerm<Model.CRMUser>(condition, "CRMUser.ufkRole,Role.rId", ref lpm);
             if (lmcu.Count > 0) { 
                 Session["UserInfo"] = lmcu[0];
                 //Hangfire.BackgroundJob.Enqueue(() => LIB.Mail.MailSend("zcc0215@hotmail.com;zcc0215@hotmail.com", "测试", "成功"));

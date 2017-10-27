@@ -41,8 +41,8 @@ $(function () {
 		var cos = [];
 
 		for (var i = 0; i <= 20; i += 0.5){
-			sin.push([i, Math.sin(i)]);
-			cos.push([i, Math.cos(i)]);
+            sin.push([i, Math.sin(i)]);
+            cos.push([i, Math.cos(i)]);
 		}
 
 		// Display the Sin and Cos Functions
@@ -117,7 +117,7 @@ $(function () {
 							show: true,
 							barWidth: 3,
 							lineWidth: 1,
-							fill: 0.8,
+                            fill: 0.8,
 						}
 					},
 

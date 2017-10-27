@@ -18,6 +18,14 @@ namespace Model
         /// </summary>
         public string rbName { get; set; }
         /// <summary>
+        /// 按钮路径地址
+        /// </summary>
+        public string rbHref { get; set; }
+        /// <summary>
+        /// 按钮显示名称
+        /// </summary>
+        public string rbHrefName { get; set; }
+        /// <summary>
         /// 按钮代码
         /// </summary>
         public string rbCode { get; set; }

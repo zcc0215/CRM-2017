@@ -7,9 +7,7 @@
     <div class="container-fluid" style="margin-bottom:30px">
         <div class="row">
             <div class="col-lg-10 col-md-10 col-sm-10"></div>
-            <div class="col-lg-2 col-md-2 col-sm-2">
-                导出：<a href='/Export/BusiAnalysis' target='_blank'>业务分析</a>
-            </div>
+           @{Html.RenderAction("Index", "RoleButton"); } 
         </div>
     </div>
     <table class="datatable tables">

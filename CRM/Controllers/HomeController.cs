@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Webdiyer.WebControls.Mvc;
@@ -110,5 +111,11 @@ namespace CRM.Controllers
 
             return View();
         }
+        //[AsyncTimeout(3000)]
+        //public async Task<ActionResult> Index()
+        //{
+        //    await Task.Delay(300);
+        //    return View();
+        //}
     }
 }

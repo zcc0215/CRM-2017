@@ -1,0 +1,14 @@
+﻿
+@{
+    Layout = null;
+    var lmrb = ViewData["lmrb"] as List<Model.RoleButton>;
+}
+
+@foreach(var mrb in lmrb)
+{
+    <div class="col-lg-2 col-md-2 col-sm-2">
+    @mrb.rbName：<a href = '@mrb.rbHref' target = '_blank' Id=@mrb.rbCode > @mrb.rbHrefName </a>
+   </div>
+}
+
+

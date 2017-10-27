@@ -14,10 +14,10 @@ namespace BLL
         /// 业务分析
         /// </summary>
         /// <returns></returns>
-        public static DataTable BusiAnalysis()
+        public static DataTable BusiAnalysis(int Begin = 0,int End=0,int Type = 0)
         {
             DAL.ExportDAL ed = new DAL.ExportDAL();
-            return ed.BusiAnalysis();
+            return ed.BusiAnalysis(Begin,End,Type);
         }
     }
 }

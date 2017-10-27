@@ -39,6 +39,10 @@ namespace Model
         /// 角色名称
         /// </summary>
         public string RoleName { get; set; }
+        /// <summary>
+        /// 权限按钮
+        /// </summary>
+        public string RoleButtons { get; set; }
         #endregion
     }
 }

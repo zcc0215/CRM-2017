@@ -177,9 +177,11 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\ActivityAssignManageController.cs" />
     <Compile Include="Controllers\ActivityManageController.cs" />
+    <Compile Include="Controllers\ApiController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\BusiChanceController.cs" />
     <Compile Include="Controllers\ClueManageController.cs" />
+    <Compile Include="Controllers\CollectController.cs" />
     <Compile Include="Controllers\ContractManageController.cs" />
     <Compile Include="Controllers\CRMUserController.cs" />
     <Compile Include="Controllers\CustomerManageController.cs" />
@@ -188,6 +190,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\OrderManageController.cs" />
+    <Compile Include="Controllers\RoleButtonController.cs" />
     <Compile Include="Controllers\RoleController.cs" />
     <Compile Include="Controllers\SaleProjectController.cs" />
     <Compile Include="Controllers\TargetCustomersController.cs" />
@@ -218,11 +221,17 @@
     <Content Include="Images\ColorBox\controls.png" />
     <Content Include="Images\ColorBox\loading.gif" />
     <Content Include="Images\ColorBox\loading_background.png" />
+    <Content Include="Images\Icons\16\i_16_bars.png" />
+    <Content Include="Images\Icons\16\i_16_charts.png" />
     <Content Include="Images\Icons\16\i_16_login.png" />
     <Content Include="Images\Icons\16\i_16_selector.png" />
     <Content Include="Images\Icons\16\i_16_sorting.png" />
     <Content Include="Images\Icons\16\i_16_sorting_asc.png" />
+    <Content Include="Images\Textures\orders_stats.png" />
     <Content Include="Images\Textures\pattern4.png" />
+    <Content Include="Images\Textures\tickets_stats.png" />
+    <Content Include="Images\Textures\users_stats.png" />
+    <Content Include="Images\Textures\visitor_stats.png" />
     <Content Include="jieshou.html" />
     <Content Include="Scripts\bootstrap-datetimepicker.min.js" />
     <Content Include="Scripts\bootstrap-datetimepicker.zh-CN.js" />
@@ -308,11 +317,14 @@
     <Content Include="Views\OrderManage\Index.cshtml" />
     <Content Include="Views\ContractManage\Index.cshtml" />
     <Content Include="Views\Export\Index.cshtml" />
+    <Content Include="Views\RoleButton\Index.cshtml" />
+    <Content Include="Views\Collect\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Models\" />
     <Folder Include="Uploads\" />
+    <Folder Include="Views\Api\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
